@@ -458,6 +458,76 @@ class Design(object):
                         print("fermeture du jeu avec key_ESCAPE 好好")
                         pygame.quit()
 
+    def afficher_ecran_victoire(self, gagnant, score_blue, score_red):
+        """Affiche un ecran de victoire graphique avec le gagnant et les scores finaux"""
+        self.screen = pygame.display.set_mode((self.width_screen, self.height_screen), pygame.FULLSCREEN)
+
+        running_victory = True
+
+        while running_victory:
+            if gagnant == "BLEU":
+                background_color = (20, 50, 150)
+                winner_color = (100, 150, 255)
+                text_color = (255, 255, 255)
+            elif gagnant == "ROUGE":
+                background_color = (150, 20, 20)
+                winner_color = (255, 100, 100)
+                text_color = (255, 255, 255)
+            else:
+                background_color = (80, 80, 80)
+                winner_color = (150, 150, 150)
+                text_color = (255, 255, 255)
+
+            self.screen.fill(background_color)
+
+            font_title = pygame.font.Font("freesansbold.ttf", 100)
+            font_winner = pygame.font.Font("freesansbold.ttf", 80)
+            font_score = pygame.font.Font("freesansbold.ttf", 50)
+            font_instruction = pygame.font.Font("freesansbold.ttf", 30)
+
+            if gagnant == "NUL":
+                text_title = font_title.render("MATCH NUL", True, text_color)
+                title_rect = text_title.get_rect(center=(self.width_screen // 2, self.height_screen // 2 - 200))
+            else:
+                text_title = font_title.render("VICTOIRE !", True, text_color)
+                title_rect = text_title.get_rect(center=(self.width_screen // 2, self.height_screen // 2 - 200))
+
+                text_winner = font_winner.render(f"LES {gagnant}S", True, winner_color)
+                winner_rect = text_winner.get_rect(center=(self.width_screen // 2, self.height_screen // 2 - 80))
+                self.screen.blit(text_winner, winner_rect)
+
+            self.screen.blit(text_title, title_rect)
+
+            text_score_blue = font_score.render(f"Score Bleu : {score_blue}", True, (100, 150, 255))
+            score_blue_rect = text_score_blue.get_rect(center=(self.width_screen // 2, self.height_screen // 2 + 50))
+            self.screen.blit(text_score_blue, score_blue_rect)
+
+            text_score_red = font_score.render(f"Score Rouge : {score_red}", True, (255, 100, 100))
+            score_red_rect = text_score_red.get_rect(center=(self.width_screen // 2, self.height_screen // 2 + 120))
+            self.screen.blit(text_score_red, score_red_rect)
+
+            text_instruction = font_instruction.render("Appuyez sur ESPACE pour continuer ou ESC pour quitter", True, text_color)
+            instruction_rect = text_instruction.get_rect(center=(self.width_screen // 2, self.height_screen - 100))
+            self.screen.blit(text_instruction, instruction_rect)
+
+            pygame.display.flip()
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running_victory = False
+                    pygame.quit()
+                    return
+
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        running_victory = False
+                        return
+
+                    if event.key == pygame.K_ESCAPE:
+                        running_victory = False
+                        pygame.quit()
+                        return
+
 
 
 

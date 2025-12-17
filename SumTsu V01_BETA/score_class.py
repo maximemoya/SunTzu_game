@@ -23,6 +23,7 @@ class Score:
         self.score_a_blue_win = False
         self.score_b_red_win = False
         self.end_game = False
+        self.gagnant = None
 
     def update(self, tour_de_jeu, liste_unitee_terrain_a, liste_unitee_terrain_b, liste_color_territories):
         self.tour_de_jeu = tour_de_jeu
@@ -63,10 +64,12 @@ class Score:
             if self.score_a_blue_win == True and self.score_a_blue > self.score_b_red:
                 print(f"\n LES BLEUS REMPORTENT LA VICTOIRE !!!")
                 self.end_game = True
+                self.gagnant = "BLEU"
 
             if self.score_b_red_win == True and self.score_a_blue < self.score_b_red:
                 print(f"\n LES ROUGES REMPORTENT LA VICTOIRE !!!")
                 self.end_game = True
+                self.gagnant = "ROUGE"
 
             else:
                 self.score_a_blue_win = False
@@ -85,11 +88,14 @@ class Score:
             if self.score_a_blue > self.score_b_red:
                 print(f"\n LES BLEUS REMPORTENT LA VICTOIRE !!!")
                 self.end_game = True
+                self.gagnant = "BLEU"
 
-            if self.score_a_blue < self.score_b_red:
+            elif self.score_a_blue < self.score_b_red:
                 print(f"\n LES ROUGES REMPORTENT LA VICTOIRE !!!")
                 self.end_game = True
+                self.gagnant = "ROUGE"
 
             else:
                 print(f"\n MATCH NUL...")
                 self.end_game = True
+                self.gagnant = "NUL"

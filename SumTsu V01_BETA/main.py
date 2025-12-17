@@ -275,10 +275,17 @@ class Game:
         self.verification_cartes_speciales_utilisees()
         self.phase_distribution_carte()
 
-        
-
 test = Game()
+
 for i in range(0, 9, 1):
     test.deroulement_test()
     if test.score_class.end_game:
         break
+
+# Afficher l'ecran de victoire si le jeu est termine
+if test.score_class.end_game and test.score_class.gagnant:
+    test.design_class.afficher_ecran_victoire(
+        gagnant=test.score_class.gagnant,
+        score_blue=test.score_class.score_a_blue,
+        score_red=test.score_class.score_b_red
+    )
