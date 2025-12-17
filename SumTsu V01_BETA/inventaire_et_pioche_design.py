@@ -27,6 +27,9 @@ class Inventaire(object):
         # remise à zéro de la liste des positions centrées des cartes de l'inventaire selon leur nombre total
         self.liste_positions_x_inventory = []
 
+        if len(self.list_inventory_cards) == 0:
+            return
+
         # pour chaque carte du nombre de carte de l'inventaire :
         for i in range(0, len(self.list_inventory_cards), 1):
 
