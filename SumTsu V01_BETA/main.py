@@ -263,13 +263,17 @@ class Game:
         self.tour_de_jeu += 1
         print(f"TOUR DE JEU {self.tour_de_jeu}")
         self.update_tour_de_jeu()
+
+        self.design_class.liste_unite_terrain_a = self.liste_unitee_terrain_a
+        self.design_class.liste_unite_terrain_b = self.liste_unitee_terrain_b
+        self.design_class.analyse_color_unit_on_each_territories()
+
         self.verification_victoire()
         self.battle_theme_music.play(loops=-1)
         self.phase_execusion_combat_design()
         self.battle_theme_music.stop()
         self.verification_cartes_speciales_utilisees()
         self.phase_distribution_carte()
-        self.verification_victoire()
 
         
 
