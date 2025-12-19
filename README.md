@@ -1,12 +1,70 @@
 # SunTzu_game
-SunTzu_Game
+thanks to SunTzu_Game_Board
 
-PRESS ESC TO EXIT
-PRESS SPACE TO CONTINUE
+**PRESS ESC TO EXIT**
 
-## Comment exécuter le jeu (Méthode Recommandée)
+**PRESS SPACE TO CONTINUE**
 
-Ce projet est une application graphique développée en Python. Il est recommandé d'utiliser un environnement virtuel (`venv`) pour isoler les dépendances du projet.
+---
+
+## Installation Rapide (Recommandée)
+
+La méthode la plus simple pour lancer le jeu est d'utiliser les scripts de lancement automatiques.
+
+### Prérequis
+
+*   Python 3
+*   Pip (le gestionnaire de paquets Python)
+
+### Sur macOS/Linux
+
+1.  Ouvrez un terminal à la racine du projet (`SunTzu_game`)
+
+2. exécuter le fichier :
+    ```bash
+    sh ./launch_game_macOS.sh
+    ```
+
+Si besoin :
+
+3.  Rendez le script exécutable (une seule fois) :
+    ```bash
+    chmod +x launch_game_macOS.sh
+    ```
+
+4.  Lancez le jeu :
+    ```bash
+    ./launch_game_macOS.sh
+    ```
+
+Le script s'occupe automatiquement de :
+- Créer l'environnement virtuel si nécessaire
+- Installer les dépendances
+- Lancer le jeu
+- Nettoyer à la fermeture
+
+### Sur Windows
+
+1.  Naviguez jusqu'au dossier du projet (`SunTzu_game`)
+
+2.  Double-cliquez sur le fichier `launch_game_Windows.bat`
+
+OU via l'invite de commandes :
+```cmd
+launch_game_Windows.bat
+```
+
+Le script s'occupe automatiquement de :
+- Créer l'environnement virtuel si nécessaire
+- Installer les dépendances
+- Lancer le jeu
+- Afficher les résultats
+
+---
+
+## Installation Manuelle (Avancée)
+
+Si vous préférez gérer manuellement l'environnement virtuel, suivez ces étapes.
 
 ### Prérequis
 
@@ -27,7 +85,7 @@ Ce projet est une application graphique développée en Python. Il est recommand
         source venv/bin/activate
         ```
     *   **Sur Windows :**
-        ```bash
+        ```cmd
         venv\Scripts\activate
         ```
     *(Votre terminal devrait maintenant afficher `(venv)` au début de la ligne.)*
