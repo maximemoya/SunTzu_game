@@ -1,20 +1,46 @@
-<h1 align="center">SunTzu_game</h1>
+<h1 align="center">🏯 SunTzu_game</h1>
+
+<p align="center">
+  <i>"L'art de la guerre, c'est de soumettre l'ennemi sans combat."</i>
+</p>
+
+<div align="center">
+  <kbd>
+    <img src="https://github.com/user-attachments/assets/000f12ff-7f8d-4898-b5fe-80514b184a6a" alt="Game Demo" width="800" style="border-radius: 10px;">
+  </kbd>
+</div>
+
+<br />
+
+<div align="center">
+  <h3>🎮 Aperçu du Gameplay</h3>
+</div>
+
+<table align="center">
+  <tr>
+    <td align="center" width="33%">
+      <img src="https://github.com/user-attachments/assets/d2ce3d01-0b20-4d1e-9194-f4298dc4afe9" alt="Blue Team" style="border-radius: 10px;"><br />
+      <sub><b>Blue Team Selection</b></sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="https://github.com/user-attachments/assets/230a2f8a-b447-497b-87a0-0a0d2f21d794" alt="Red Team" style="border-radius: 10px;"><br />
+      <sub><b>Red Team Selection</b></sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="https://github.com/user-attachments/assets/1e1822e3-a77c-42ff-968e-dc79e462a204" alt="Battleground" style="border-radius: 10px;"><br />
+      <sub><b>Battleground Area</b></sub>
+    </td>
+  </tr>
+</table>
+
+<br />
 
 ---
 
-<div align="center">
-  <img src="https://github.com/user-attachments/assets/000f12ff-7f8d-4898-b5fe-80514b184a6a" alt="votre_description" />
-</div>
-<br></br>
-
-<table style="border: none;">
-  <tr>
-    <td><img src="https://github.com/user-attachments/assets/d2ce3d01-0b20-4d1e-9194-f4298dc4afe9" width="500" alt="blueTeamSelection"></td>
-    <td><img src="https://github.com/user-attachments/assets/230a2f8a-b447-497b-87a0-0a0d2f21d794" width="500" alt="redTeamSelection"></td>
-    <td><img src="https://github.com/user-attachments/assets/1e1822e3-a77c-42ff-968e-dc79e462a204" width="500" alt="battleGround"></td>
-  </tr>
-</table>
-<br></br>
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" />
+  <img src="https://img.shields.io/badge/Pygame-active?style=for-the-badge&logo=python&logoColor=white&color=yellow" />
+</p>
 
 ## 1 - Installation Rapide (Recommandée)
 
