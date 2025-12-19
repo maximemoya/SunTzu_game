@@ -1,4 +1,4 @@
-# SunTzu_game
+<h1 align="center">SunTzu_game</h1>
 
 <table style="border: none;">
   <tr>
@@ -7,10 +7,9 @@
     <td><img src="https://github.com/user-attachments/assets/1e1822e3-a77c-42ff-968e-dc79e462a204" width="500" alt="battleGround"></td>
   </tr>
 </table>
+<br></br>
 
----
-
-## Installation Rapide (Recommandée)
+## 1 - Installation Rapide (Recommandée)
 
 La méthode la plus simple pour lancer le jeu est d'utiliser les scripts de lancement automatiques.
 
@@ -63,9 +62,12 @@ Le script s'occupe automatiquement de :
 - Lancer le jeu
 - Afficher les résultats
 
----
+<p align="center">
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=auto&height=100&section=footer" width="100%"/>
+</p>
+<br></br>
 
-## Installation Manuelle (Avancée)
+## 1 - Installation Manuelle (Avancée)
 
 Si vous préférez gérer manuellement l'environnement virtuel, suivez ces étapes.
 
@@ -120,12 +122,26 @@ Lorsque vous avez fini de travailler sur le projet, vous pouvez désactiver l'en
 deactivate
 ```
 
----
+<p align="center">
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=auto&height=100&section=footer" width="100%"/>
+</p>
+<br></br>
 
-## Commandes en jeu
+## 2 - Commandes en jeu
 
 - **ECHAP POUR QUITTER LA PARTIE**
 
 - **ESPACE POUR CONTINUER**
 
 - **DRAG AND DROP POUR BOUGER LES CARTES**
+
+<br></br>
+
+<p align="center">
+  Réalisé avec ❤️ par <b>Maxime Moya</b> — <i>Développeur Passionné</i>
+  <br>
+</p>
+<br></br>
+<br></br>
+<br></br>
+
