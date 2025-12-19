@@ -1,5 +1,12 @@
 <h1 align="center">SunTzu_game</h1>
 
+---
+
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/000f12ff-7f8d-4898-b5fe-80514b184a6a" alt="votre_description" />
+</div>
+<br></br>
+
 <table style="border: none;">
   <tr>
     <td><img src="https://github.com/user-attachments/assets/d2ce3d01-0b20-4d1e-9194-f4298dc4afe9" width="500" alt="blueTeamSelection"></td>
