@@ -1,9 +1,12 @@
 # SunTzu_game
-thanks to SunTzu_Game_Board
 
-**PRESS ESC TO EXIT**
-
-**PRESS SPACE TO CONTINUE**
+<table style="border: none;">
+  <tr>
+    <td><img src="https://github.com/user-attachments/assets/d2ce3d01-0b20-4d1e-9194-f4298dc4afe9" width="500" alt="blueTeamSelection"></td>
+    <td><img src="https://github.com/user-attachments/assets/230a2f8a-b447-497b-87a0-0a0d2f21d794" width="500" alt="redTeamSelection"></td>
+    <td><img src="https://github.com/user-attachments/assets/1e1822e3-a77c-42ff-968e-dc79e462a204" width="500" alt="battleGround"></td>
+  </tr>
+</table>
 
 ---
 
@@ -116,3 +119,13 @@ Lorsque vous avez fini de travailler sur le projet, vous pouvez désactiver l'en
 ```bash
 deactivate
 ```
+
+---
+
+## Commandes en jeu
+
+- **ECHAP POUR QUITTER LA PARTIE**
+
+- **ESPACE POUR CONTINUER**
+
+- **DRAG AND DROP POUR BOUGER LES CARTES**
