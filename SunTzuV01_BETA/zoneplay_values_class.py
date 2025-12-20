@@ -3,12 +3,12 @@ import random
 
 class Zoneplay:
 
-    def __init__(self):
-        self.listvalue1 = []
-        self.listvalue2 = []
-        self.listvalue3 = []
-        self.listvalue4 = []
-        self.listvalue5 = []
+    def __init__(self) -> None:
+        self.listvalue1: list[int] = []
+        self.listvalue2: list[int] = []
+        self.listvalue3: list[int] = []
+        self.listvalue4: list[int] = []
+        self.listvalue5: list[int] = []
 
     def random_zone_value(self):
         self.listvalue1 = random.sample([1, 2, 3], 3)

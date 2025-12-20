@@ -29,10 +29,10 @@ class Game:
         # self.deck_class_b.random_combat_list()
         # self.liste_combat_b = self.deck_class_b.list_combat_cards
 
-        self.liste_combat_a = [0, 0, 0, 0, 0]
-        self.liste_combat_b = [0, 0, 0, 0, 0]
-        self.liste_unitee_terrain_a = [0, 0, 0, 0, 0]
-        self.liste_unitee_terrain_b = [0, 0, 0, 0, 0]
+        self.liste_combat_a: list[int] = [0, 0, 0, 0, 0]
+        self.liste_combat_b: list[int] = [0, 0, 0, 0, 0]
+        self.liste_unitee_terrain_a: list[int] = [0, 0, 0, 0, 0]
+        self.liste_unitee_terrain_b: list[int] = [0, 0, 0, 0, 0]
         self.var_pos_unit = 0
 
         self.deck_class_a.shuffle()
@@ -182,7 +182,7 @@ class Game:
         self.var_pos_unit = 0
         self.liste_combat_b = self.design_inventory_red.list_combat_validee
 
-    def phase_combat(self, liste_combat_a, liste_unitee_terrain_a, liste_combat_b, liste_unitee_terrain_b):
+    def phase_combat(self, liste_combat_a: list[int], liste_unitee_terrain_a: list[int], liste_combat_b: list[int], liste_unitee_terrain_b: list[int]) -> None:
         # self.design_inventory.deck_bleu.list_combat_cards
         # self.inventaire_B.list_combat_cards
 

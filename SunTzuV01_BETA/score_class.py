@@ -1,8 +1,8 @@
 class Score:
 
-    def __init__(self, tour_de_jeu=0, liste_unitee_terrain_a=[0, 0, 0, 0, 0], liste_unitee_terrain_b=[0, 0, 0, 0, 0],
-                 listvalue1=[0, 0, 0], listvalue2=[0, 0, 0], listvalue3=[0, 0, 0], listvalue4=[0, 0, 0], listvalue5=[0, 0, 0],
-                 liste_color_territories=[9, 9, 9, 9, 9], liste_size_territories=[99, 99, 99, 99, 99]):
+    def __init__(self, tour_de_jeu: int = 0, liste_unitee_terrain_a: list[int] = [0, 0, 0, 0, 0], liste_unitee_terrain_b: list[int] = [0, 0, 0, 0, 0],
+                 listvalue1: list[int] = [0, 0, 0], listvalue2: list[int] = [0, 0, 0], listvalue3: list[int] = [0, 0, 0], listvalue4: list[int] = [0, 0, 0], listvalue5: list[int] = [0, 0, 0],
+                 liste_color_territories: list[str | int] = [9, 9, 9, 9, 9], liste_size_territories: list[int] = [99, 99, 99, 99, 99]) -> None:
 
         self.tour_de_jeu = tour_de_jeu
         self.liste_unitee_terrain_a_bleu = liste_unitee_terrain_a
@@ -23,9 +23,9 @@ class Score:
         self.score_a_blue_win = False
         self.score_b_red_win = False
         self.end_game = False
-        self.gagnant = None
+        self.gagnant: str | None = None
 
-    def update(self, tour_de_jeu, liste_unitee_terrain_a, liste_unitee_terrain_b, liste_color_territories):
+    def update(self, tour_de_jeu: int, liste_unitee_terrain_a: list[int], liste_unitee_terrain_b: list[int], liste_color_territories: list[str | int]) -> None:
         self.tour_de_jeu = tour_de_jeu
         self.liste_unitee_terrain_a_bleu = liste_unitee_terrain_a
         self.liste_unitee_terrain_b_rouge = liste_unitee_terrain_b
