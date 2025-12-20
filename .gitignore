@@ -1,3 +1,9 @@
 venv
 __pycache__
 .DS_Store
+
+build
+
+maxime
+GEMINI.md
+CLAUDE.md
