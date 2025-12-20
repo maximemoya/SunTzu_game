@@ -51,21 +51,47 @@ class Deck(object):
                 self.list_inventory_cards.append(self.list_normals_cards[j - 1])
 
     def distribute(self):
-        print(f"\n            JOUEUR : {self.player}\n")
-        print(
-            f"DEBUT DISTRIBUTION . . .\n"
-            f"CARTES présentes avant distribution dans l'inventaire du joueur {self.player} : {self.list_inventory_cards} (list_inventory_cards)"
-        )
+        # Distribution de la manche 1
+        if self.tour_de_jeu == 1:
+            print(f"\nDébut de la MANCHE : 1\n")
+            # Ajout des 6 cartes "normales" (1 à 6)
+            for i in range(1, 7, 1):
+                self.list_inventory_cards.append(i)
+            # Ajout des cartes spéciales de manche 1
+            if self.player == "A, BLEU":
+                self.list_inventory_cards.append(7)
+                self.list_inventory_cards.append(8)
+                self.list_inventory_cards.append(11)
+            elif self.player == "B, ROUGE":
+                self.list_inventory_cards.append(9)
+                self.list_inventory_cards.append(10)
+                self.list_inventory_cards.append(12)
 
-        self.distribute_special()
-        self.distribute_normal()
-        self.list_inventory_cards.sort()
+        # Distribution de la manche 2
+        if self.tour_de_jeu == 4:
+            print(f"\nDébut de la MANCHE : 2\n")
+            if self.player == "A, BLEU":
+                self.list_inventory_cards.append(9)
+                self.list_inventory_cards.append(10)
+                self.list_inventory_cards.append(12)
+            elif self.player == "B, ROUGE":
+                self.list_inventory_cards.append(7)
+                self.list_inventory_cards.append(8)
+                self.list_inventory_cards.append(11)
 
-        print(
-            f"FIN DISTRIBUTION . . .\n"
-            f"CARTES présentent dans l'inventaire du joueur {self.player} : {self.list_inventory_cards} (list_inventory_cards)"
-        )
-        print("###COMBAT###")
+        # Distribution de la manche 3
+        if self.tour_de_jeu == 7:
+            print(f"\nDébut de la MANCHE : 3\n")
+            if self.player == "A, BLEU":
+                self.list_inventory_cards.append(13)
+                self.list_inventory_cards.append(14)
+                self.list_inventory_cards.append(14)
+            elif self.player == "B, ROUGE":
+                self.list_inventory_cards.append(13)
+                self.list_inventory_cards.append(14)
+                self.list_inventory_cards.append(14)
+
+        print(f"Tour numéro : {self.tour_de_jeu}")
 
     def show(self):
 

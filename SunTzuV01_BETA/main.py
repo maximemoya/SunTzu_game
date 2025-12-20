@@ -26,9 +26,9 @@ class Game:
         # Initialize screen once for the whole game
         self.width_screen = 1200
         self.height_screen = 700
-        self.screen = pygame.display.set_mode(
-            (self.width_screen, self.height_screen), pygame.FULLSCREEN
-        )
+
+        # Mode fenetre pour toutes les plateformes (evite les soucis de resolution/coordonnees)
+        self.screen = pygame.display.set_mode((self.width_screen, self.height_screen))
 
         self.zoneplay_values_class = Zoneplay()
         self.zoneplay_values_class.random_zone_value()
@@ -38,8 +38,8 @@ class Game:
         self.listvalue4 = self.zoneplay_values_class.listvalue4
         self.listvalue5 = self.zoneplay_values_class.listvalue5
 
-        self.tour_de_jeu = 0
-        self.max_tours = 9
+        self.tour_de_jeu = 1
+        self.max_tours = 10
 
         self.deck_class_a = Deck("A, BLEU", tour_de_jeu=self.tour_de_jeu)
         self.deck_class_b = Deck("B, ROUGE", tour_de_jeu=self.tour_de_jeu)
@@ -166,7 +166,21 @@ class Game:
         )
         self.update_tour_de_jeu()
 
-        # Re-init Design for animation with updated values
+        # Update Design data for analysis (needed for score calculation)
+        self.design_class.liste_unite_terrain_a = self.liste_unitee_terrain_a
+        self.design_class.liste_unite_terrain_b = self.liste_unitee_terrain_b
+        self.design_class.analyse_color_unit_on_each_territories()
+
+        # Update Score data and calculate score BEFORE animation display
+        self.score_class.update(
+            tour_de_jeu=self.tour_de_jeu,
+            liste_unitee_terrain_a=self.liste_unitee_terrain_a,
+            liste_unitee_terrain_b=self.liste_unitee_terrain_b,
+            liste_color_territories=self.design_class.liste_color_territories,
+        )
+        self.score_class.win_condition()
+
+        # Re-init Design for animation with updated values (including score)
         self.design_class.update_design(
             score_blue=self.score_class.score_a_blue,
             score_red=self.score_class.score_b_red,
@@ -195,15 +209,8 @@ class Game:
     def check_victory_and_cleanup(self):
         self.battle_theme_music.stop()
 
-        self.score_class.update(
-            tour_de_jeu=self.tour_de_jeu,
-            liste_unitee_terrain_a=self.liste_unitee_terrain_a,
-            liste_unitee_terrain_b=self.liste_unitee_terrain_b,
-            liste_color_territories=self.design_class.liste_color_territories,
-        )
-
-        self.score_class.win_condition()
-
+        # Score calculation is now done in start_phase_anim_combat
+        
         if self.score_class.end_game:
             self.state = GameState.VICTOIRE
             # Design class handles victory drawing, just need to set data if needed

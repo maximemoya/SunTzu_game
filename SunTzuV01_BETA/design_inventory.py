@@ -470,7 +470,7 @@ class DesignInventoryBlue:
         # Pion du tour
         self.screen.blit(
             self.design_class.pion_dragon_32x32,
-            (int(self.width_screen / 2 + 211), 33 * self.tour_de_jeu),
+            (int(self.width_screen / 2 + 211), 33 * (self.tour_de_jeu - 1)),
         )
 
         # Cartes des valeurs de zone
@@ -832,7 +832,7 @@ class DesignInventoryRed:
         # Pion du tour
         self.screen.blit(
             self.design_class.pion_dragon_32x32,
-            (int(self.width_screen / 2 + 211), 33 * self.tour_de_jeu),
+            (int(self.width_screen / 2 + 211), 33 * (self.tour_de_jeu - 1)),
         )
 
         # Cartes des valeurs de zone

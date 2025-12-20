@@ -32,7 +32,7 @@ class Score:
         self.liste_color_territories = liste_color_territories
 
     def win_condition(self):
-        if self.tour_de_jeu == 3:
+        if self.tour_de_jeu == 4:
             for i in range(0, 5, 1):
                 if self.liste_color_territories[i] == "BLEU":
                     liste = self.combined_list_values_12345[i]
@@ -50,7 +50,7 @@ class Score:
 
             print(f"\n    SCORE BLEU : {self.score_a_blue} / SCORE ROUGE : {self.score_b_red} \n")
 
-        if self.tour_de_jeu == 6:
+        if self.tour_de_jeu == 7:
             for i in range(0, 5, 1):
                 if self.liste_color_territories[i] == "BLEU":
                     liste = self.combined_list_values_12345[i]
@@ -75,7 +75,7 @@ class Score:
                 self.score_a_blue_win = False
                 self.score_b_red_win = False
 
-        if self.tour_de_jeu == 9:
+        if self.tour_de_jeu == 10:
             for i in range(0, 5, 1):
                 if self.liste_color_territories[i] == "BLEU":
                     liste = self.combined_list_values_12345[i]

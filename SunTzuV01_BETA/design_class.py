@@ -554,7 +554,7 @@ class Design(object):
             self.pion_dragon_32x32,
             (
                 int(self.width_screen // 2 + 225),
-                195 + 28 * self.tour_de_jeu,
+                195 + 28 * (self.tour_de_jeu - 1),
             ),
         )
 
