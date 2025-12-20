@@ -6,22 +6,21 @@ from typing import cast
 class Inventaire(object):
 
     def __init__(self, list_inventory_cards: list[int]) -> None:
-        pygame.init()
         # Liste des positions "X" (haut à gauche des cartes) en fonction du nombre de cartes dans l'inventaire, centrés.
         self.liste_positions_x_inventory: list[int] = []
         # Liste des positions "X" (haut à gauche des cartes) dans la zone deck de combat, centrés.
         self.liste_positions_x_combat: list[int] = []
         self.list_inventory_cards: list[int] = list_inventory_cards
 
-    designclass = Design()
-    designclass.charger_liste_all_cards_img()
+        self.designclass = Design()
+        self.designclass.charger_liste_all_cards_img()
 
-    back_wallet_inventory_img = pygame.image.load(
-        "ressources/inventaire_wallet_back.png"
-    )
-    front_wallet_inventory_img = pygame.image.load(
-        "ressources/inventaire_wallet_front.png"
-    )
+        self.back_wallet_inventory_img = pygame.image.load(
+            "ressources/inventaire_wallet_back.png"
+        )
+        self.front_wallet_inventory_img = pygame.image.load(
+            "ressources/inventaire_wallet_front.png"
+        )
 
     # Affiche sur "designclass.screen" les cartes de l'inventaire de manière centrée sur X
     #       -> Résultat = 'self.liste_position_x_inventory'
@@ -63,9 +62,6 @@ class Inventaire(object):
                 # self.designclass.screen.blit(self.designclass.liste_all_cards_img[image_temporary],
                 #                            (position_x, self.designclass.height_screen - 150))
 
-                # Raffraichissement écran
-                # pygame.display.flip()
-
     # Affiche sur "designclass.screen" les 5 cartes selectionnées pour combattre de manière centrée sur X
     #       -> Résultat = 'self.liste_position_x_combat'
     def afficher_emplacement_combat_bleu(self):
@@ -92,8 +88,6 @@ class Inventaire(object):
                 cast(pygame.Surface, self.designclass.liste_all_cards_img[0]),
                 (position_x, self.designclass.height_screen // 2),
             )
-            # Raffraichissement écran
-            pygame.display.flip()
 
     def afficher_emplacement_combat_rouge(self):
 
@@ -119,8 +113,6 @@ class Inventaire(object):
                 cast(pygame.Surface, self.designclass.liste_all_cards_img[20]),
                 (position_x, self.designclass.height_screen // 2),
             )
-            # Raffraichissement écran
-            pygame.display.flip()
 
     def start_inventaire(self, couleur: str = "BLEU"):
 

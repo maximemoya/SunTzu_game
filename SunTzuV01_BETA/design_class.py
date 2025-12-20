@@ -57,10 +57,18 @@ class Design(object):
         self.height_screen = 700
 
         pygame.display.set_caption("FENETRE design_class SUN TZU")
-        self.screen = pygame.display.set_mode(
-            (self.width_screen, self.height_screen), pygame.FULLSCREEN
-        )
+        self.screen = pygame.display.get_surface()
+        
         self.background_img = pygame.image.load("ressources/back_ground_550x300.png")
+
+        # Coordonnees des 5 territoires
+        self.territory_coords = [
+            (self.width_screen // 2 - 90, self.height_screen // 2 - 70),   # XINJIANG
+            (self.width_screen // 2 - 105, self.height_screen // 2 + 5),   # TIBET
+            (self.width_screen // 2 + 100, self.height_screen // 2 + 30),  # QINGHAI
+            (self.width_screen // 2 + 80, self.height_screen // 2 - 110),  # MONGOLIA
+            (self.width_screen // 2 + 100, self.height_screen // 2 - 50)   # MANDARIN
+        ]
 
         # RESSOURCES GRAPHIQUES :
 
@@ -428,9 +436,7 @@ class Design(object):
         listvalue5: list[int],
     ) -> None:
 
-        self.screen = pygame.display.set_mode(
-            (self.width_screen, self.height_screen), pygame.FULLSCREEN
-        )
+        self.screen = pygame.display.get_surface()
         self.background_img = pygame.image.load("ressources/back_ground_550x300.png")
 
         self.score_blue = score_blue
@@ -453,7 +459,28 @@ class Design(object):
     def quitter(self):
         self.running = False
 
-    def start_design(self):
+    def update(self):
+        # Animation ou logique continue si necessaire
+        pass
+
+    def handle_event(self, event: pygame.event.Event) -> str | None:
+        if event.type == pygame.QUIT:
+            self.quitter()
+            return "QUIT"
+
+        if event.type == pygame.KEYDOWN:
+            # détecter si la touche espace est pressée
+            if event.key == pygame.K_SPACE:
+                print("ESPACE PRESSE")
+                self.quitter()
+                return "CONTINUE"
+
+            if event.key == pygame.K_ESCAPE:
+                print("fermeture du jeu avec key_ESCAPE 好好")
+                return "QUIT"
+        return None
+
+    def draw(self):
         self.charger_liste_all_cards_img()
         self.charger_liste_all_numbers_img()
         self.analyse_color_unit_on_each_territories()
@@ -463,6 +490,10 @@ class Design(object):
         blue = (0, 0, 180)
         red = (255, 0, 0)
         white = (255, 255, 255)
+        
+        # Clear/Fill handled by background blit, but good to fill black first just in case
+        self.screen.fill(black)
+
         font_score = pygame.font.Font("freesansbold.ttf", 32)
         font_continue = pygame.font.Font("freesansbold.ttf", 26)
         text_surface_score_blue = font_score.render(
@@ -476,225 +507,153 @@ class Design(object):
         )
         self.screen.blit(text_surface_score_blue, (20, self.height_screen - 100))
         self.screen.blit(text_surface_score_red, (10, 100))
+        
         # Centrer le message en bas de l'ecran
         text_rect = text_surface_continue.get_rect(
             center=(self.width_screen // 2 + 20, self.height_screen - 10)
         )
         self.screen.blit(text_surface_continue, text_rect)
 
-        print(f"liste_color_territories{self.liste_color_territories}")
-        print(f"liste_size_territories{self.liste_size_territories}")
-
-        while self.running:
-
-            self.screen.blit(
-                self.background_img,
-                (self.width_screen // 2 - 265, self.height_screen // 2 - 140),
-            )
-
-            j = 0
-            # en HAUT du plateau, positionne cartes attaques du joueur B, ROUGE
-            for i in self.liste_combat_b:
-                self.screen.blit(
-                    cast(pygame.Surface, self.liste_all_cards_img[20 + i]),
-                    (
-                        self.width_screen // 2 - 260 + 110 * j,
-                        self.height_screen // 2 - 295,
-                    ),
-                )
-                j += 1
-            j = 0
-            # en bas du plateau, positionne cartes attaques du joueur A, BLEU
-            for i in self.liste_combat_a:
-                self.screen.blit(
-                    cast(pygame.Surface, self.liste_all_cards_img[i]),
-                    (
-                        self.width_screen // 2 - 260 + 110 * j,
-                        self.height_screen // 2 + 160,
-                    ),
-                )
-                j += 1
-            j = 0
-
-            # Position des unités sur les terrains (1 à 5) :
-            if self.var_pos_unit < 4:
-                # Terrain 1 : "XINJIANG"
-                self.position_unit_on_map(
-                    (self.width_screen // 2 - 90, self.height_screen // 2 - 70)
-                )
-                self.var_pos_unit += 1
-
-                # Terrain 1 : "TIBET"
-                self.position_unit_on_map(
-                    (self.width_screen // 2 - 105, self.height_screen // 2 + 5)
-                )
-                self.var_pos_unit += 1
-
-                # Terrain 1 : "QINGHAI"
-                self.position_unit_on_map(
-                    (self.width_screen // 2 + 100, self.height_screen // 2 + 30)
-                )
-                self.var_pos_unit += 1
-
-                # Terrain 1 : "MONGOLIA"
-                self.position_unit_on_map(
-                    (self.width_screen // 2 + 80, self.height_screen // 2 - 110)
-                )
-                self.var_pos_unit += 1
-
-                # Terrain 1 : "MANDARIN"
-                self.position_unit_on_map(
-                    (self.width_screen // 2 + 100, self.height_screen // 2 - 50)
-                )
-                self.var_pos_unit += 1
-                pygame.display.flip()
-
-            for event in pygame.event.get():
-
-                if self.var01:
-                    self.screen.blit(
-                        self.pion_dragon_32x32,
-                        (
-                            int(self.width_screen // 2 + 225),
-                            195 + 28 * self.tour_de_jeu,
-                        ),
-                    )
-
-                    # affiche carte zone value XINJIANG :
-                    self.screen.blit(
-                        self.listvalue1_img, (int(self.width_screen / 2 - 370), 265)
-                    )
-                    # affiche carte zone value TIBET :
-                    self.screen.blit(
-                        self.listvalue2_img, (int(self.width_screen / 2 - 370), 380)
-                    )
-                    # affiche carte zone value QINGHAI :
-                    self.screen.blit(
-                        self.listvalue3_img, (int(self.width_screen / 2 + 290), 420)
-                    )
-                    # affiche carte zone value MONGOLIA :
-                    self.screen.blit(
-                        self.listvalue4_img, (int(self.width_screen / 2 + 290), 220)
-                    )
-                    # affiche carte zone value MANDARIN :
-                    self.screen.blit(
-                        self.listvalue5_img, (int(self.width_screen / 2 + 290), 320)
-                    )
-
-                    pygame.display.flip()
-                    self.var01 = False
-
-                # vérifier que l'évènement est fermeture de fenêtre
-                if event.type == pygame.QUIT:
-                    self.quitter()
-                    pygame.quit()
-                    print("fermeture du jeu 好好")
-
-                if event.type == pygame.KEYDOWN:
-                    # détecter si la touche espace est pressée
-                    if event.key == pygame.K_SPACE:
-                        print("ESPACE PRESSE")
-                        self.quitter()
-                        break
-
-                    if event.key == pygame.K_ESCAPE:
-                        print("fermeture du jeu avec key_ESCAPE 好好")
-                        pygame.quit()
-
-    def afficher_ecran_victoire(
-        self, gagnant: str, score_blue: int, score_red: int
-    ) -> None:
-        """Affiche un ecran de victoire graphique avec le gagnant et les scores finaux"""
-        self.screen = pygame.display.set_mode(
-            (self.width_screen, self.height_screen), pygame.FULLSCREEN
+        # Background
+        self.screen.blit(
+            self.background_img,
+            (self.width_screen // 2 - 265, self.height_screen // 2 - 140),
         )
 
-        running_victory = True
-
-        while running_victory:
-            if gagnant == "BLEU":
-                background_color = (20, 50, 150)
-                winner_color = (100, 150, 255)
-                text_color = (255, 255, 255)
-            elif gagnant == "ROUGE":
-                background_color = (150, 20, 20)
-                winner_color = (255, 100, 100)
-                text_color = (255, 255, 255)
-            else:
-                background_color = (80, 80, 80)
-                winner_color = (150, 150, 150)
-                text_color = (255, 255, 255)
-
-            self.screen.fill(background_color)
-
-            font_title = pygame.font.Font("freesansbold.ttf", 100)
-            font_winner = pygame.font.Font("freesansbold.ttf", 80)
-            font_score = pygame.font.Font("freesansbold.ttf", 50)
-            font_instruction = pygame.font.Font("freesansbold.ttf", 30)
-
-            if gagnant == "NUL":
-                text_title = font_title.render("MATCH NUL", True, text_color)
-                title_rect = text_title.get_rect(
-                    center=(self.width_screen // 2, self.height_screen // 2 - 200)
-                )
-                print(f"FIN DU JEU : MATCH NUL")
-            else:
-                text_title = font_title.render("VICTOIRE !", True, text_color)
-                title_rect = text_title.get_rect(
-                    center=(self.width_screen // 2, self.height_screen // 2 - 200)
-                )
-
-                text_winner = font_winner.render(f"LES {gagnant}S", True, winner_color)
-                winner_rect = text_winner.get_rect(
-                    center=(self.width_screen // 2, self.height_screen // 2 - 80)
-                )
-                self.screen.blit(text_winner, winner_rect)
-
-            self.screen.blit(text_title, title_rect)
-
-            text_score_blue = font_score.render(
-                f"Score Bleu : {score_blue}", True, (100, 150, 255)
+        j = 0
+        # en HAUT du plateau, positionne cartes attaques du joueur B, ROUGE
+        for i in self.liste_combat_b:
+            self.screen.blit(
+                cast(pygame.Surface, self.liste_all_cards_img[20 + i]),
+                (
+                    self.width_screen // 2 - 260 + 110 * j,
+                    self.height_screen // 2 - 295,
+                ),
             )
-            score_blue_rect = text_score_blue.get_rect(
-                center=(self.width_screen // 2, self.height_screen // 2 + 50)
+            j += 1
+        j = 0
+        # en bas du plateau, positionne cartes attaques du joueur A, BLEU
+        for i in self.liste_combat_a:
+            self.screen.blit(
+                cast(pygame.Surface, self.liste_all_cards_img[i]),
+                (
+                    self.width_screen // 2 - 260 + 110 * j,
+                    self.height_screen // 2 + 160,
+                ),
             )
-            self.screen.blit(text_score_blue, score_blue_rect)
+            j += 1
 
-            text_score_red = font_score.render(
-                f"Score Rouge : {score_red}", True, (255, 100, 100)
+        # Position des unités sur les terrains (1 à 5)
+        for idx, pos in enumerate(self.territory_coords):
+            self.var_pos_unit = idx
+            self.position_unit_on_map(pos)
+
+        # Pion Dragon (Animation tour de jeu)
+        # Note: self.var01 logic removed, simply draw it
+        self.screen.blit(
+            self.pion_dragon_32x32,
+            (
+                int(self.width_screen // 2 + 225),
+                195 + 28 * self.tour_de_jeu,
+            ),
+        )
+
+        # Affiche cartes zone value
+        # XINJIANG
+        self.screen.blit(
+            self.listvalue1_img, (int(self.width_screen / 2 - 370), 265)
+        )
+        # TIBET
+        self.screen.blit(
+            self.listvalue2_img, (int(self.width_screen / 2 - 370), 380)
+        )
+        # QINGHAI
+        self.screen.blit(
+            self.listvalue3_img, (int(self.width_screen / 2 + 290), 420)
+        )
+        # MONGOLIA
+        self.screen.blit(
+            self.listvalue4_img, (int(self.width_screen / 2 + 290), 220)
+        )
+        # MANDARIN
+        self.screen.blit(
+            self.listvalue5_img, (int(self.width_screen / 2 + 290), 320)
+        )
+
+    def draw_victory(self, gagnant: str, score_blue: int, score_red: int) -> None:
+        """Affiche un ecran de victoire graphique avec le gagnant et les scores finaux"""
+        if gagnant == "BLEU":
+            background_color = (20, 50, 150)
+            winner_color = (100, 150, 255)
+            text_color = (255, 255, 255)
+        elif gagnant == "ROUGE":
+            background_color = (150, 20, 20)
+            winner_color = (255, 100, 100)
+            text_color = (255, 255, 255)
+        else:
+            background_color = (80, 80, 80)
+            winner_color = (150, 150, 150)
+            text_color = (255, 255, 255)
+
+        self.screen.fill(background_color)
+
+        font_title = pygame.font.Font("freesansbold.ttf", 100)
+        font_winner = pygame.font.Font("freesansbold.ttf", 80)
+        font_score = pygame.font.Font("freesansbold.ttf", 50)
+        font_instruction = pygame.font.Font("freesansbold.ttf", 30)
+
+        if gagnant == "NUL":
+            text_title = font_title.render("MATCH NUL", True, text_color)
+            title_rect = text_title.get_rect(
+                center=(self.width_screen // 2, self.height_screen // 2 - 200)
             )
-            score_red_rect = text_score_red.get_rect(
-                center=(self.width_screen // 2, self.height_screen // 2 + 120)
+        else:
+            text_title = font_title.render("VICTOIRE !", True, text_color)
+            title_rect = text_title.get_rect(
+                center=(self.width_screen // 2, self.height_screen // 2 - 200)
             )
-            self.screen.blit(text_score_red, score_red_rect)
 
-            text_instruction = font_instruction.render(
-                "Appuyez sur ESPACE pour continuer ou ESC pour quitter",
-                True,
-                text_color,
+            text_winner = font_winner.render(f"LES {gagnant}S", True, winner_color)
+            winner_rect = text_winner.get_rect(
+                center=(self.width_screen // 2, self.height_screen // 2 - 80)
             )
-            instruction_rect = text_instruction.get_rect(
-                center=(self.width_screen // 2, self.height_screen - 100)
-            )
-            self.screen.blit(text_instruction, instruction_rect)
+            self.screen.blit(text_winner, winner_rect)
 
-            pygame.display.flip()
+        self.screen.blit(text_title, title_rect)
 
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running_victory = False
-                    pygame.quit()
-                    return
+        text_score_blue = font_score.render(
+            f"Score Bleu : {score_blue}", True, (100, 150, 255)
+        )
+        score_blue_rect = text_score_blue.get_rect(
+            center=(self.width_screen // 2, self.height_screen // 2 + 50)
+        )
+        self.screen.blit(text_score_blue, score_blue_rect)
 
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_SPACE:
-                        running_victory = False
-                        pygame.quit()
-                        print(f"FIN DU JEU : VICTOIRE {gagnant}")
-                        return
+        text_score_red = font_score.render(
+            f"Score Rouge : {score_red}", True, (255, 100, 100)
+        )
+        score_red_rect = text_score_red.get_rect(
+            center=(self.width_screen // 2, self.height_screen // 2 + 120)
+        )
+        self.screen.blit(text_score_red, score_red_rect)
 
-                    if event.key == pygame.K_ESCAPE:
-                        running_victory = False
-                        pygame.quit()
-                        print(f"FIN DU JEU : VICTOIRE {gagnant}")
-                        return
+        text_instruction = font_instruction.render(
+            "Appuyez sur ESPACE pour continuer ou ESC pour quitter",
+            True,
+            text_color,
+        )
+        instruction_rect = text_instruction.get_rect(
+            center=(self.width_screen // 2, self.height_screen - 100)
+        )
+        self.screen.blit(text_instruction, instruction_rect)
+
+    def handle_event_victory(self, event: pygame.event.Event) -> str | None:
+        if event.type == pygame.QUIT:
+            return "QUIT"
+
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                return "QUIT" # Or restart? Code implies quit/finish
+            if event.key == pygame.K_ESCAPE:
+                return "QUIT"
+        return None
