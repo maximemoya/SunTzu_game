@@ -4,7 +4,7 @@
 
 *"L'art de la guerre, c'est de soumettre l'ennemi sans combat."*
 
-🎮 <a href="https://maximemoya.github.io/SunTzu_game/" target="_blank">CLIQUEZ ICI POUR TESTER LE JEU</a>
+[![Tester le jeu](https://img.shields.io/badge/Pour_tester_le_jeu_:-CLIQUEZ_ICI-orange?labelColor=blue&style=for-the-badge&logo=joycon)](https://maximemoya.github.io/SunTzu_game/)
 
 **Note :** Version Web. Prévoir **30 à 60 secondes** de chargement selon votre connexion.
 
