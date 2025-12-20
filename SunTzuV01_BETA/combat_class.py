@@ -5,12 +5,12 @@ class Combat(object):
 
     # systeme de carte possée sur le terrain, on va simuler le combat avec des valeurs aléatoires prises dans listA et listB
 
-    def __init__(self, liste_de_combat_a=[0, 0, 0, 0, 0], liste_unite_terrain_a=[0, 0, 0, 0, 0],
-                 liste_de_combat_b=[0, 0, 0, 0, 0], liste_unite_terrain_b=[0, 0, 0, 0, 0]):
+    def __init__(self, liste_de_combat_a: list[int] = [0, 0, 0, 0, 0], liste_unite_terrain_a: list[int] = [0, 0, 0, 0, 0],
+                 liste_de_combat_b: list[int] = [0, 0, 0, 0, 0], liste_unite_terrain_b: list[int] = [0, 0, 0, 0, 0]) -> None:
         self.debut_jeu = True
 
-        self.inventaire_A = []
-        self.inventaire_B = []
+        self.inventaire_A: list[int] = []
+        self.inventaire_B: list[int] = []
 
         self.liste_de_combatA = liste_de_combat_a
         self.liste_de_combatB = liste_de_combat_b

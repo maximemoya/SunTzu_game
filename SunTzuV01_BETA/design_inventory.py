@@ -1,8 +1,7 @@
 import pygame
 from design_class import Design
-from deck_class import Deck
 from inventaire_et_pioche_design import Inventaire
-from zoneplay_values_class import Zoneplay
+from typing import cast, Any
 
 """
 pygame.mouse.get_pos() # donne la position (x, y)
@@ -16,38 +15,47 @@ sprites_clicked = [sprite for sprite in toute_ma_liste_de_sprites if sprite.rect
 
 class BoutonCardInventory(pygame.sprite.Sprite):
 
-    def __init__(self, coord_x, coord_y, image_path, value, id, original_x=None, original_y=None):
-        super(BoutonCardInventory, self).__init__()
-        self.image = image_path
-        self.rect_x = coord_x
-        self.rect_y = coord_y
-        self.rect = self.image.get_rect(topleft=(self.rect_x, self.rect_y))
+    def __init__(
+        self,
+        coord_x: int,
+        coord_y: int,
+        image_path: pygame.Surface,
+        value: int,
+        id: int,
+        original_x: int | None = None,
+        original_y: int | None = None,
+        *groups: Any,
+    ) -> None:
+        super().__init__(*groups)
+        self.image: pygame.Surface = image_path
+        self.rect_x: int = coord_x
+        self.rect_y: int = coord_y
+        self.rect: pygame.Rect = self.image.get_rect(topleft=(self.rect_x, self.rect_y))
 
-        self.id = id
-        self.value = value
+        self.id: int = id
+        self.value: int = value
 
         # Pour le drag & drop
-        self.dragging = False
-        self.original_x = original_x if original_x is not None else coord_x
-        self.original_y = original_y if original_y is not None else coord_y
-        self.combat_slot = None  # Emplacement de combat occupe (0-4 ou None)
+        self.dragging: bool = False
+        self.original_x: int = original_x if original_x is not None else coord_x
+        self.original_y: int = original_y if original_y is not None else coord_y
+        self.combat_slot: int | None = None
+        self.clicked: bool = False
+        self.linkReady: bool = False
+        self.links: list[Any] = []
 
-        self.clicked = False
-        self.linkReady = False
-        self.links = []
-
-    def afficher_carte_bouton(self, screen):
+    def afficher_carte_bouton(self, screen: pygame.Surface):
         screen.blit(self.image, (self.rect_x, self.rect_y))
         self.rect = self.image.get_rect(topleft=(self.rect_x, self.rect_y))
 
     def detruire_selection_rect(self):
         self.rect = self.image.get_rect(topleft=(-200, -200))
 
-    def start_drag(self, mouse_pos):
+    def start_drag(self, mouse_pos: tuple[int, int]):
         """Commence le drag de la carte"""
         self.dragging = True
 
-    def update_drag(self, mouse_pos):
+    def update_drag(self, mouse_pos: tuple[int, int]):
         """Met a jour la position pendant le drag"""
         if self.dragging:
             # Centre la carte sur la souris
@@ -67,76 +75,91 @@ class BoutonCardInventory(pygame.sprite.Sprite):
 
 class BoutonOKandUndo(pygame.sprite.Sprite):
 
-    def __init__(self, coord_x, coord_y, image_path, value, id):
-        super(BoutonOKandUndo, self).__init__()
-        self.image = image_path
-        self.rect_x = coord_x
-        self.rect_y = coord_y
-        self.rect = self.image.get_rect(topleft=(self.rect_x, self.rect_y))
+    def __init__(self, coord_x: int, coord_y: int, image_path: pygame.Surface, value: str, id: int, *groups: Any) -> None:
+        super().__init__(*groups)
+        self.image: pygame.Surface = image_path
+        self.rect_x: int = coord_x
+        self.rect_y: int = coord_y
+        self.rect: pygame.Rect = self.image.get_rect(topleft=(self.rect_x, self.rect_y))
 
-        self.id = id
-        self.value = value
+        self.id: int = id
+        self.value: str = value
 
-        self.clicked = False
-        self.linkReady = False
-        self.links = []
+        self.clicked: bool = False
+        self.linkReady: bool = False
+        self.links: list[Any] = []
 
-    def afficher_ok_undo_bouton(self, screen):
+    def afficher_ok_undo_bouton(self, screen: pygame.Surface):
         screen.blit(self.image, (self.rect_x, self.rect_y))
         self.rect = self.image.get_rect(topleft=(self.rect_x, self.rect_y))
 
 
 class DesignInventoryBlue:
 
-    def __init__(self, tour_de_jeu_deck_class=0, list_inventory_cards=[], listvalue1_img=0,
-                 listvalue2_img=0, listvalue3_img=0, listvalue4_img=0, listvalue5_img=0,
-                 liste_unite_terrain_a=[0, 0, 0, 0, 0], liste_unite_terrain_b=[0, 0, 0, 0, 0],
-                 liste_all_numbers_img=[]):
+    def __init__(
+        self,
+        tour_de_jeu_deck_class: int = 0,
+        list_inventory_cards: list[int] = [],
+        listvalue1_img: pygame.Surface | int = 0,
+        listvalue2_img: pygame.Surface | int = 0,
+        listvalue3_img: pygame.Surface | int = 0,
+        listvalue4_img: pygame.Surface | int = 0,
+        listvalue5_img: pygame.Surface | int = 0,
+        liste_unite_terrain_a: list[int] = [0, 0, 0, 0, 0],
+        liste_unite_terrain_b: list[int] = [0, 0, 0, 0, 0],
+        liste_all_numbers_img: list[pygame.Surface | int] = [],
+    ) -> None:
         pygame.init()
 
-        self.liste_combat_temp = [0, 0, 0, 0, 0]
-        self.list_combat_validee = [0, 0, 0, 0, 0]
+        self.liste_combat_temp: list[int] = [0, 0, 0, 0, 0]
+        self.list_combat_validee: list[int] = [0, 0, 0, 0, 0]
 
-        self.listvalue1_img = listvalue1_img
-        self.listvalue2_img = listvalue2_img
-        self.listvalue3_img = listvalue3_img
-        self.listvalue4_img = listvalue4_img
-        self.listvalue5_img = listvalue5_img
+        self.listvalue1_img: pygame.Surface | int = listvalue1_img
+        self.listvalue2_img: pygame.Surface | int = listvalue2_img
+        self.listvalue3_img: pygame.Surface | int = listvalue3_img
+        self.listvalue4_img: pygame.Surface | int = listvalue4_img
+        self.listvalue5_img: pygame.Surface | int = listvalue5_img
 
-        self.list_inventory_cards = list_inventory_cards
+        self.list_inventory_cards: list[int] = list_inventory_cards
 
-        self.liste_unite_terrain_a = liste_unite_terrain_a
-        self.liste_unite_terrain_b = liste_unite_terrain_b
-        self.liste_size_territories = [0, 0, 0, 0, 0]
-        self.liste_color_territories = ["VIDE", "VIDE", "VIDE", "VIDE", "VIDE"]
-        self.var_pos_unit = 0
-        self.liste_all_numbers_img = liste_all_numbers_img
+        self.liste_unite_terrain_a: list[int] = liste_unite_terrain_a
+        self.liste_unite_terrain_b: list[int] = liste_unite_terrain_b
+        self.liste_size_territories: list[int] = [0, 0, 0, 0, 0]
+        self.liste_color_territories: list[str] = ["VIDE", "VIDE", "VIDE", "VIDE", "VIDE"]
+        self.var_pos_unit: int = 0
+        self.liste_all_numbers_img: list[pygame.Surface | int] = liste_all_numbers_img
 
-        self.design_class = Design()
-        self.inventaire_et_pioche_design = Inventaire(self.list_inventory_cards)
+        self.design_class: Design = Design()
+        self.inventaire_et_pioche_design: Inventaire = Inventaire(self.list_inventory_cards)
 
-        self.tour_de_jeu = tour_de_jeu_deck_class
+        self.tour_de_jeu: int = tour_de_jeu_deck_class
 
-        self.var01 = True
-        self.statut = True
+        self.var01: bool = True
+        self.statut: bool = True
 
-        self.width_screen = 1200
-        self.height_screen = 700
+        self.width_screen: int = 1200
+        self.height_screen: int = 700
 
-        self.screen = pygame.display.set_mode((self.width_screen, self.height_screen), pygame.FULLSCREEN)
+        self.screen: pygame.Surface = pygame.display.get_surface()
 
-        self.bouton_card_liste = pygame.sprite.Group()
-        self.bouton_ok_undo = pygame.sprite.Group()
+        self.bouton_card_liste: pygame.sprite.Group[Any] = pygame.sprite.Group()
+        self.bouton_ok_undo: pygame.sprite.Group[Any] = pygame.sprite.Group()
 
         # Variables pour le drag & drop
-        self.dragged_card = None
-        self.combat_slot_rects = []  # Rectangles des emplacements de combat
+        self.dragged_card: BoutonCardInventory | None = None
+        self.combat_slot_rects: list[pygame.Rect] = []  # Rectangles des emplacements de combat
 
-        self.ok_button_img = pygame.image.load("ressources/OK.png")
-        self.undo_button_img = pygame.image.load("ressources/Undo.png")
-        self.back_wallet_inventory_img = pygame.image.load("ressources/inventaire_wallet_back.png")
-        self.front_wallet_inventory_img = pygame.image.load("ressources/inventaire_wallet_front.png")
-        self.map_img = pygame.image.load("ressources/back_ground_700x330.png")
+        self.ok_button_img: pygame.Surface = pygame.image.load("ressources/OK.png")
+        self.undo_button_img: pygame.Surface = pygame.image.load("ressources/Undo.png")
+        self.back_wallet_inventory_img: pygame.Surface = pygame.image.load(
+            "ressources/inventaire_wallet_back.png"
+        )
+        self.front_wallet_inventory_img: pygame.Surface = pygame.image.load(
+            "ressources/inventaire_wallet_front.png"
+        )
+        self.map_img: pygame.Surface = pygame.image.load("ressources/back_ground_700x330.png")
+
+        self.add_bouton_card()
 
     def quitter(self):
         self.statut = False
@@ -150,8 +173,12 @@ class DesignInventoryBlue:
             x_card = self.inventaire_et_pioche_design.liste_positions_x_combat[i]
             y_card = self.height_screen // 2
             # Centrer la zone de drop sur la position de la carte
-            x = x_card - (card_width - 70) // 2  # 70 = largeur approximative de la carte
-            y = y_card - (card_height - 100) // 2  # 100 = hauteur approximative de la carte
+            x = (
+                x_card - (card_width - 70) // 2
+            )  # 70 = largeur approximative de la carte
+            y = (
+                y_card - (card_height - 100) // 2
+            )  # 100 = hauteur approximative de la carte
             rect = pygame.Rect(x, y, card_width, card_height)
             self.combat_slot_rects.append(rect)
 
@@ -182,24 +209,42 @@ class DesignInventoryBlue:
                 self.liste_color_territories.insert(i, "VIDE")
 
     # Fonction qui affiche les troupes sur le plateau selon leur nombre et leur couleur en fonction du paramètre (position) qui doit être rempli comme cela (x,y)
-    def position_unit_on_map(self, position, var_pos_unit):
+    def position_unit_on_map(self, position: tuple[int, int], var_pos_unit: int):
         if self.liste_color_territories[var_pos_unit] == "BLEU":
             if self.liste_size_territories[var_pos_unit] < 14:
-                self.screen.blit(self.liste_all_numbers_img[self.liste_size_territories[var_pos_unit]],
-                                 position)
+                self.screen.blit(
+                    cast(
+                        pygame.Surface,
+                        self.liste_all_numbers_img[self.liste_size_territories[var_pos_unit]],
+                    ),
+                    position,
+                )
             if self.liste_size_territories[var_pos_unit] >= 14:
-                self.screen.blit(self.liste_all_numbers_img[0], position)
+                self.screen.blit(
+                    cast(pygame.Surface, self.liste_all_numbers_img[0]), position
+                )
 
         if self.liste_color_territories[var_pos_unit] == "ROUGE":
 
             if self.liste_size_territories[var_pos_unit] < 14:
-                self.screen.blit(self.liste_all_numbers_img[self.liste_size_territories[var_pos_unit] + 20],
-                                 position)
+                self.screen.blit(
+                    cast(
+                        pygame.Surface,
+                        self.liste_all_numbers_img[
+                            self.liste_size_territories[var_pos_unit] + 20
+                        ],
+                    ),
+                    position,
+                )
             if self.liste_size_territories[var_pos_unit] >= 14:
-                self.screen.blit(self.liste_all_numbers_img[20], position)
+                self.screen.blit(
+                    cast(pygame.Surface, self.liste_all_numbers_img[20]), position
+                )
 
         if self.liste_color_territories[var_pos_unit] == "VIDE":
-            self.screen.blit(self.liste_all_numbers_img[14], position)
+            self.screen.blit(
+                cast(pygame.Surface, self.liste_all_numbers_img[14]), position
+            )
 
     def add_bouton_card(self):
 
@@ -211,215 +256,210 @@ class DesignInventoryBlue:
         # Creer les zones de drop
         self.create_combat_slot_rects()
 
-        self.screen.blit(self.back_wallet_inventory_img,
-                                      (0, self.height_screen - 160))
+        self.screen.blit(self.back_wallet_inventory_img, (0, self.height_screen - 160))
 
-        for i in range(0, len(self.inventaire_et_pioche_design.list_inventory_cards), 1):
+        for i in range(
+            0, len(self.inventaire_et_pioche_design.list_inventory_cards), 1
+        ):
             original_x = self.inventaire_et_pioche_design.liste_positions_x_inventory[i]
             original_y = self.height_screen - 150
-            self.bouton_card_liste.add(BoutonCardInventory(
+            new_card = BoutonCardInventory(
                 coord_x=original_x,
                 coord_y=original_y,
-                image_path=self.design_class.liste_all_cards_img[
-                    self.inventaire_et_pioche_design.list_inventory_cards[i]],
+                image_path=cast(
+                    pygame.Surface,
+                    self.design_class.liste_all_cards_img[
+                        self.inventaire_et_pioche_design.list_inventory_cards[i]
+                    ],
+                ),
                 value=self.inventaire_et_pioche_design.list_inventory_cards[i],
                 id=len(self.bouton_card_liste) + 1,
                 original_x=original_x,
-                original_y=original_y))
+                original_y=original_y,
+            )
+            self.bouton_card_liste.add(new_card)
 
-            self.screen.blit(self.back_wallet_inventory_img,
-                                          (0, self.height_screen - 160))
+            self.screen.blit(
+                self.back_wallet_inventory_img, (0, self.height_screen - 160)
+            )
 
-        self.bouton_ok_undo.add(BoutonOKandUndo(
+        ok_btn = BoutonOKandUndo(
             coord_x=self.width_screen - 100,
             coord_y=self.height_screen - 350,
             image_path=self.ok_button_img,
             value="OK",
-            id=len(self.bouton_ok_undo) + 1))
+            id=len(self.bouton_ok_undo) + 1,
+        )
+        self.bouton_ok_undo.add(ok_btn)
 
-        self.bouton_ok_undo.add(BoutonOKandUndo(
+        undo_btn = BoutonOKandUndo(
             coord_x=self.width_screen - 100,
             coord_y=self.height_screen - 270,
             image_path=self.undo_button_img,
             value="UNDO",
-            id=len(self.bouton_ok_undo) + 1))
+            id=len(self.bouton_ok_undo) + 1,
+        )
+        self.bouton_ok_undo.add(undo_btn)
 
-        for card in self.bouton_card_liste:
-            card.afficher_carte_bouton(screen=self.screen)
+        # Note: Drawing is handled in draw(), no need to blit here immediately if we are in a loop
 
-        for button in self.bouton_ok_undo:
-            button.afficher_ok_undo_bouton(screen=self.screen)
-
-        self.screen.blit(self.front_wallet_inventory_img,
-                                      (0, self.height_screen - 50))
-
-    def en_cours_execution(self):
-        events = pygame.event.get()
-
+    def update(self):
+        """Mise a jour logique"""
         # Mise a jour du mouvement de la carte en cours de drag
         if self.dragged_card:
             mouse_pos = pygame.mouse.get_pos()
             self.dragged_card.update_drag(mouse_pos)
 
-        for event in events:
+    def handle_event(self, event: pygame.event.Event) -> str | None:
+        """Gestion des evenements"""
+        if event.type == pygame.QUIT:
+            self.quitter()
+            return "QUIT"
 
-            # affichage carte du jeu, pion du tour, cartes des valeurs des territoires, execute add_bouton_card
-            if self.var01:
-                self.screen.blit(self.map_img, (int(self.width_screen * 0.15), 0))
-
-                self.screen.blit(self.design_class.pion_dragon_32x32,
-                                              (int(self.width_screen / 2 + 211),
-                                               33 * self.tour_de_jeu))
-
-                # affiche carte zone value XINJIANG :
-                self.screen.blit(self.listvalue1_img,
-                                              (int(self.width_screen / 2 - 540),
-                                               35))
-                # affiche carte zone value TIBET :
-                self.screen.blit(self.listvalue2_img,
-                                              (int(self.width_screen / 2 - 540),
-                                               185))
-                # affiche carte zone value QINGHAI :
-                self.screen.blit(self.listvalue3_img,
-                                              (int(self.width_screen / 2 + 300),
-                                               205))
-                # affiche carte zone value MONGOLIA :
-                self.screen.blit(self.listvalue4_img,
-                                              (int(self.width_screen / 2 + 300),
-                                               5))
-                # affiche carte zone value MANDARIN :
-                self.screen.blit(self.listvalue5_img,
-                                              (int(self.width_screen / 2 + 300),
-                                               105))
-
-                self.add_bouton_card()
-                self.var01 = False
-
-            if event.type == pygame.QUIT:
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
                 self.quitter()
+                return "QUIT"
+                # pygame.quit() # On evite de quitter brutalement pygame ici
 
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    self.quitter()
-                    pygame.quit()
+        # Gestion du drag & drop
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            pos = pygame.mouse.get_pos()
 
-            # Gestion du drag & drop
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                pos = pygame.mouse.get_pos()
-
-                # Clic gauche - commence le drag
-                if event.button == 1:
-                    # Verifie d'abord les boutons OK/UNDO
-                    clicked_button = False
-                    for key in self.bouton_ok_undo:
-                        if key.rect.collidepoint(pos):
-                            clicked_button = True
-                            if key.value == "OK":
-                                if self.liste_combat_temp.count(0) == 0:
-                                    self.list_combat_validee = self.liste_combat_temp
-                                    print(f"list_combat_validee : {self.list_combat_validee}")
-                                    self.statut = False
-                                else:
-                                    print(f"Vous devez placer 5 cartes!")
-
-                            elif key.value == "UNDO":
-                                # Reinitialiser tout
-                                for i in range(0, 5, 1):
-                                    self.screen.blit(self.design_class.liste_all_cards_img[0],
-                                                    (self.inventaire_et_pioche_design.liste_positions_x_combat[i],
-                                                     self.height_screen // 2))
-                                self.bouton_card_liste.empty()
-                                self.bouton_ok_undo.empty()
-                                self.add_bouton_card()
-                                self.liste_combat_temp = [0, 0, 0, 0, 0]
-                            break
-
-                    # Si on n'a pas clique sur un bouton, chercher une carte
-                    if not clicked_button:
-                        for card in self.bouton_card_liste:
-                            if card.rect.collidepoint(pos):
-                                self.dragged_card = card
-                                card.start_drag(pos)
-                                break
-
-                # Clic droit - retirer une carte placee
-                elif event.button == 3:
-                    for card in self.bouton_card_liste:
-                        if card.rect.collidepoint(pos) and card.combat_slot is not None:
-                            # Retirer la carte de l'emplacement de combat
-                            self.liste_combat_temp[card.combat_slot] = 0
-                            card.return_to_original()
-                            print(f"Carte retiree - liste_combat_temp: {self.liste_combat_temp}")
-                            break
-
-            # Fin du drag
-            elif event.type == pygame.MOUSEBUTTONUP:
-                if event.button == 1 and self.dragged_card:
-                    pos = pygame.mouse.get_pos()
-                    dropped_in_slot = False
-
-                    # Verifier si on drop sur un emplacement de combat
-                    for slot_index, slot_rect in enumerate(self.combat_slot_rects):
-                        if slot_rect.collidepoint(pos):
-                            # Verifier si l'emplacement est libre ou occupé
-                            if self.liste_combat_temp[slot_index] == 0:
-                                # Emplacement libre - placer la carte
-                                if self.dragged_card.combat_slot is not None:
-                                    # La carte vient d'un autre emplacement
-                                    self.liste_combat_temp[self.dragged_card.combat_slot] = 0
-
-                                self.liste_combat_temp[slot_index] = self.dragged_card.value
-                                self.dragged_card.combat_slot = slot_index
-                                self.dragged_card.rect_x = self.inventaire_et_pioche_design.liste_positions_x_combat[slot_index]
-                                self.dragged_card.rect_y = self.height_screen // 2
-                                dropped_in_slot = True
-                                print(f"Carte placee - liste_combat_temp: {self.liste_combat_temp}")
+            # Clic gauche - commence le drag
+            if event.button == 1:
+                # Verifie d'abord les boutons OK/UNDO
+                clicked_button = False
+                for key in self.bouton_ok_undo:
+                    if key.rect.collidepoint(pos):
+                        clicked_button = True
+                        if key.value == "OK":
+                            if self.liste_combat_temp.count(0) == 0:
+                                self.list_combat_validee = self.liste_combat_temp
+                                print(
+                                    f"list_combat_validee : {self.list_combat_validee}"
+                                )
+                                self.statut = False
                             else:
-                                # Emplacement occupe - echanger les cartes
-                                for other_card in self.bouton_card_liste:
-                                    if other_card.combat_slot == slot_index:
-                                        # Echanger les positions
-                                        old_slot = self.dragged_card.combat_slot
+                                print(f"Vous devez placer 5 cartes!")
 
-                                        if old_slot is not None:
-                                            # Echange entre deux emplacements
-                                            self.liste_combat_temp[slot_index] = self.dragged_card.value
-                                            self.liste_combat_temp[old_slot] = other_card.value
+                        elif key.value == "UNDO":
+                            # Reinitialiser tout
+                            # Note: Screen redraw handled in draw(), just reset logic
+                            self.bouton_card_liste.empty()
+                            self.bouton_ok_undo.empty()
+                            self.add_bouton_card()
+                            self.liste_combat_temp = [0, 0, 0, 0, 0]
+                        break
 
-                                            other_card.combat_slot = old_slot
-                                            other_card.rect_x = self.inventaire_et_pioche_design.liste_positions_x_combat[old_slot]
-                                            other_card.rect_y = self.height_screen // 2
-                                        else:
-                                            # Deplacement de l'inventaire vers un emplacement occupé
-                                            self.liste_combat_temp[slot_index] = self.dragged_card.value
-                                            other_card.return_to_original()
-
-                                        self.dragged_card.combat_slot = slot_index
-                                        self.dragged_card.rect_x = self.inventaire_et_pioche_design.liste_positions_x_combat[slot_index]
-                                        self.dragged_card.rect_y = self.height_screen // 2
-                                        dropped_in_slot = True
-                                        print(f"Cartes echangees - liste_combat_temp: {self.liste_combat_temp}")
-                                        break
+                # Si on n'a pas clique sur un bouton, chercher une carte
+                if not clicked_button:
+                    for card in self.bouton_card_liste:
+                        if card.rect.collidepoint(pos):
+                            self.dragged_card = card
+                            card.start_drag(pos)
                             break
 
-                    # Si pas droppé sur un emplacement valide, retourner à l'origine
-                    if not dropped_in_slot:
-                        if self.dragged_card.combat_slot is None:
-                            self.dragged_card.return_to_original()
-                        else:
-                            # Retourner a l'emplacement de combat precedent
-                            slot = self.dragged_card.combat_slot
-                            self.dragged_card.rect_x = self.inventaire_et_pioche_design.liste_positions_x_combat[slot]
+            # Clic droit - retirer une carte placee
+            elif event.button == 3:
+                for card in self.bouton_card_liste:
+                    if card.rect.collidepoint(pos) and card.combat_slot is not None:
+                        # Retirer la carte de l'emplacement de combat
+                        self.liste_combat_temp[card.combat_slot] = 0
+                        card.return_to_original()
+                        print(
+                            f"Carte retiree - liste_combat_temp: {self.liste_combat_temp}"
+                        )
+                        break
+
+        # Fin du drag
+        elif event.type == pygame.MOUSEBUTTONUP:
+            if event.button == 1 and self.dragged_card:
+                pos = pygame.mouse.get_pos()
+                dropped_in_slot = False
+
+                # Verifier si on drop sur un emplacement de combat
+                for slot_index, slot_rect in enumerate(self.combat_slot_rects):
+                    if slot_rect.collidepoint(pos):
+                        # Verifier si l'emplacement est libre ou occupé
+                        if self.liste_combat_temp[slot_index] == 0:
+                            # Emplacement libre - placer la carte
+                            if self.dragged_card.combat_slot is not None:
+                                # La carte vient d'un autre emplacement
+                                self.liste_combat_temp[
+                                    self.dragged_card.combat_slot
+                                ] = 0
+
+                            self.liste_combat_temp[slot_index] = (
+                                self.dragged_card.value
+                            )
+                            self.dragged_card.combat_slot = slot_index
+                            self.dragged_card.rect_x = self.inventaire_et_pioche_design.liste_positions_x_combat[
+                                slot_index
+                            ]
                             self.dragged_card.rect_y = self.height_screen // 2
+                            dropped_in_slot = True
+                            print(
+                                f"Carte placee - liste_combat_temp: {self.liste_combat_temp}"
+                            )
+                        else:
+                            # Emplacement occupe - echanger les cartes
+                            for other_card in self.bouton_card_liste:
+                                if other_card.combat_slot == slot_index:
+                                    # Echanger les positions
+                                    old_slot = self.dragged_card.combat_slot
 
-                    self.dragged_card.stop_drag()
-                    self.dragged_card = None
+                                    if old_slot is not None:
+                                        # Echange entre deux emplacements
+                                        self.liste_combat_temp[slot_index] = (
+                                            self.dragged_card.value
+                                        )
+                                        self.liste_combat_temp[old_slot] = (
+                                            other_card.value
+                                        )
 
-        # Redessiner l'ecran
-        self.redraw_screen()
-        pygame.display.flip()
+                                        other_card.combat_slot = old_slot
+                                        other_card.rect_x = self.inventaire_et_pioche_design.liste_positions_x_combat[
+                                            old_slot
+                                        ]
+                                        other_card.rect_y = self.height_screen // 2
+                                    else:
+                                        # Deplacement de l'inventaire vers un emplacement occupé
+                                        self.liste_combat_temp[slot_index] = (
+                                            self.dragged_card.value
+                                        )
+                                        other_card.return_to_original()
 
-    def redraw_screen(self):
+                                    self.dragged_card.combat_slot = slot_index
+                                    self.dragged_card.rect_x = self.inventaire_et_pioche_design.liste_positions_x_combat[
+                                        slot_index
+                                    ]
+                                    self.dragged_card.rect_y = (
+                                        self.height_screen // 2
+                                    )
+                                    dropped_in_slot = True
+                                    print(
+                                        f"Cartes echangees - liste_combat_temp: {self.liste_combat_temp}"
+                                    )
+                                    break
+                        break
+
+                # Si pas droppé sur un emplacement valide, retourner à l'origine
+                if not dropped_in_slot:
+                    if self.dragged_card.combat_slot is None:
+                        self.dragged_card.return_to_original()
+                    else:
+                        # Retourner a l'emplacement de combat precedent
+                        slot = self.dragged_card.combat_slot
+                        self.dragged_card.rect_x = self.inventaire_et_pioche_design.liste_positions_x_combat[
+                            slot
+                        ]
+                        self.dragged_card.rect_y = self.height_screen // 2
+
+                self.dragged_card.stop_drag()
+                self.dragged_card = None
+
+    def draw(self):
         """Redessine tout l'ecran"""
         # Effacer l'ecran completement
         self.screen.fill((0, 0, 0))
@@ -428,24 +468,45 @@ class DesignInventoryBlue:
         self.screen.blit(self.map_img, (int(self.width_screen * 0.15), 0))
 
         # Pion du tour
-        self.screen.blit(self.design_class.pion_dragon_32x32,
-                        (int(self.width_screen / 2 + 211), 33 * self.tour_de_jeu))
+        self.screen.blit(
+            self.design_class.pion_dragon_32x32,
+            (int(self.width_screen / 2 + 211), 33 * (self.tour_de_jeu - 1)),
+        )
 
         # Cartes des valeurs de zone
-        self.screen.blit(self.listvalue1_img, (int(self.width_screen / 2 - 540), 35))
-        self.screen.blit(self.listvalue2_img, (int(self.width_screen / 2 - 540), 185))
-        self.screen.blit(self.listvalue3_img, (int(self.width_screen / 2 + 300), 205))
-        self.screen.blit(self.listvalue4_img, (int(self.width_screen / 2 + 300), 5))
-        self.screen.blit(self.listvalue5_img, (int(self.width_screen / 2 + 300), 105))
+        self.screen.blit(
+            cast(pygame.Surface, self.listvalue1_img),
+            (int(self.width_screen / 2 - 540), 35),
+        )
+        self.screen.blit(
+            cast(pygame.Surface, self.listvalue2_img),
+            (int(self.width_screen / 2 - 540), 185),
+        )
+        self.screen.blit(
+            cast(pygame.Surface, self.listvalue3_img),
+            (int(self.width_screen / 2 + 300), 205),
+        )
+        self.screen.blit(
+            cast(pygame.Surface, self.listvalue4_img),
+            (int(self.width_screen / 2 + 300), 5),
+        )
+        self.screen.blit(
+            cast(pygame.Surface, self.listvalue5_img),
+            (int(self.width_screen / 2 + 300), 105),
+        )
 
         # Fond du wallet
         self.screen.blit(self.back_wallet_inventory_img, (0, self.height_screen - 160))
 
         # Dessiner les emplacements de combat (cartes vides)
         for i in range(5):
-            self.screen.blit(self.design_class.liste_all_cards_img[0],
-                           (self.inventaire_et_pioche_design.liste_positions_x_combat[i],
-                            self.height_screen // 2))
+            self.screen.blit(
+                cast(pygame.Surface, self.design_class.liste_all_cards_img[0]),
+                (
+                    self.inventaire_et_pioche_design.liste_positions_x_combat[i],
+                    self.height_screen // 2,
+                ),
+            )
 
         # Dessiner toutes les cartes SAUF celle en cours de drag
         for card in self.bouton_card_liste:
@@ -466,46 +527,60 @@ class DesignInventoryBlue:
 
 class DesignInventoryRed:
 
-    def __init__(self, tour_de_jeu_deck_class=0, list_inventory_cards=[], listvalue1_img=0,
-                 listvalue2_img=0, listvalue3_img=0, listvalue4_img=0, listvalue5_img=0):
+    def __init__(
+        self,
+        tour_de_jeu_deck_class: int = 0,
+        list_inventory_cards: list[int] = [],
+        listvalue1_img: pygame.Surface | int = 0,
+        listvalue2_img: pygame.Surface | int = 0,
+        listvalue3_img: pygame.Surface | int = 0,
+        listvalue4_img: pygame.Surface | int = 0,
+        listvalue5_img: pygame.Surface | int = 0,
+    ) -> None:
         pygame.init()
 
-        self.liste_combat_temp = [0, 0, 0, 0, 0]
-        self.list_combat_validee = [0, 0, 0, 0, 0]
+        self.liste_combat_temp: list[int] = [0, 0, 0, 0, 0]
+        self.list_combat_validee: list[int] = [0, 0, 0, 0, 0]
 
-        self.listvalue1_img = listvalue1_img
-        self.listvalue2_img = listvalue2_img
-        self.listvalue3_img = listvalue3_img
-        self.listvalue4_img = listvalue4_img
-        self.listvalue5_img = listvalue5_img
+        self.listvalue1_img: pygame.Surface | int = listvalue1_img
+        self.listvalue2_img: pygame.Surface | int = listvalue2_img
+        self.listvalue3_img: pygame.Surface | int = listvalue3_img
+        self.listvalue4_img: pygame.Surface | int = listvalue4_img
+        self.listvalue5_img: pygame.Surface | int = listvalue5_img
 
-        self.list_inventory_cards_red = list_inventory_cards
+        self.list_inventory_cards_red: list[int] = list_inventory_cards
 
-        self.design_class = Design()
-        self.inventaire_et_pioche_design = Inventaire(self.list_inventory_cards_red)
+        self.design_class: Design = Design()
+        self.inventaire_et_pioche_design: Inventaire = Inventaire(self.list_inventory_cards_red)
 
-        self.tour_de_jeu = tour_de_jeu_deck_class
+        self.tour_de_jeu: int = tour_de_jeu_deck_class
 
-        self.var01 = True
-        self.statut = True
+        self.var01: bool = True
+        self.statut: bool = True
 
-        self.width_screen = 1200
-        self.height_screen = 700
+        self.width_screen: int = 1200
+        self.height_screen: int = 700
 
-        self.screen = pygame.display.set_mode((self.width_screen, self.height_screen), pygame.FULLSCREEN)
+        self.screen: pygame.Surface = pygame.display.get_surface()
 
-        self.bouton_card_liste = pygame.sprite.Group()
-        self.bouton_ok_undo = pygame.sprite.Group()
+        self.bouton_card_liste: pygame.sprite.Group[Any] = pygame.sprite.Group()
+        self.bouton_ok_undo: pygame.sprite.Group[Any] = pygame.sprite.Group()
 
         # Variables pour le drag & drop
-        self.dragged_card = None
-        self.combat_slot_rects = []  # Rectangles des emplacements de combat
+        self.dragged_card: BoutonCardInventory | None = None
+        self.combat_slot_rects: list[pygame.Rect] = []  # Rectangles des emplacements de combat
 
-        self.ok_button_img = pygame.image.load("ressources/OK.png")
-        self.undo_button_img = pygame.image.load("ressources/Undo.png")
-        self.back_wallet_inventory_img = pygame.image.load("ressources/inventaire_wallet_back.png")
-        self.front_wallet_inventory_img = pygame.image.load("ressources/inventaire_wallet_front.png")
-        self.map_img = pygame.image.load("ressources/back_ground_700x330.png")
+        self.ok_button_img: pygame.Surface = pygame.image.load("ressources/OK.png")
+        self.undo_button_img: pygame.Surface = pygame.image.load("ressources/Undo.png")
+        self.back_wallet_inventory_img: pygame.Surface = pygame.image.load(
+            "ressources/inventaire_wallet_back.png"
+        )
+        self.front_wallet_inventory_img: pygame.Surface = pygame.image.load(
+            "ressources/inventaire_wallet_front.png"
+        )
+        self.map_img: pygame.Surface = pygame.image.load("ressources/back_ground_700x330.png")
+
+        self.add_bouton_card()
 
     def quitter(self):
         self.statut = False
@@ -519,8 +594,12 @@ class DesignInventoryRed:
             x_card = self.inventaire_et_pioche_design.liste_positions_x_combat[i]
             y_card = self.height_screen // 2
             # Centrer la zone de drop sur la position de la carte
-            x = x_card - (card_width - 70) // 2  # 70 = largeur approximative de la carte
-            y = y_card - (card_height - 100) // 2  # 100 = hauteur approximative de la carte
+            x = (
+                x_card - (card_width - 70) // 2
+            )  # 70 = largeur approximative de la carte
+            y = (
+                y_card - (card_height - 100) // 2
+            )  # 100 = hauteur approximative de la carte
             rect = pygame.Rect(x, y, card_width, card_height)
             self.combat_slot_rects.append(rect)
 
@@ -534,38 +613,50 @@ class DesignInventoryRed:
         # Creer les zones de drop
         self.create_combat_slot_rects()
 
-        self.screen.blit(self.back_wallet_inventory_img,
-                         (0, self.height_screen - 160))
+        self.screen.blit(self.back_wallet_inventory_img, (0, self.height_screen - 160))
 
-        for i in range(0, len(self.inventaire_et_pioche_design.list_inventory_cards), 1):
+        for i in range(
+            0, len(self.inventaire_et_pioche_design.list_inventory_cards), 1
+        ):
             original_x = self.inventaire_et_pioche_design.liste_positions_x_inventory[i]
             original_y = self.height_screen - 150
-            self.bouton_card_liste.add(BoutonCardInventory(
+            new_card = BoutonCardInventory(
                 coord_x=original_x,
                 coord_y=original_y,
-                image_path=self.design_class.liste_all_cards_img[
-                    self.inventaire_et_pioche_design.list_inventory_cards[i] + 20],
+                image_path=cast(
+                    pygame.Surface,
+                    self.design_class.liste_all_cards_img[
+                        self.inventaire_et_pioche_design.list_inventory_cards[i] + 20
+                    ],
+                ),
                 value=self.inventaire_et_pioche_design.list_inventory_cards[i],
                 id=len(self.bouton_card_liste) + 1,
                 original_x=original_x,
-                original_y=original_y))
+                original_y=original_y,
+            )
+            self.bouton_card_liste.add(new_card)
 
-            self.screen.blit(self.back_wallet_inventory_img,
-                             (0, self.height_screen - 160))
+            self.screen.blit(
+                self.back_wallet_inventory_img, (0, self.height_screen - 160)
+            )
 
-        self.bouton_ok_undo.add(BoutonOKandUndo(
+        ok_btn = BoutonOKandUndo(
             coord_x=self.width_screen - 100,
             coord_y=self.height_screen - 350,
             image_path=self.ok_button_img,
             value="OK",
-            id=len(self.bouton_ok_undo) + 1))
+            id=len(self.bouton_ok_undo) + 1,
+        )
+        self.bouton_ok_undo.add(ok_btn)
 
-        self.bouton_ok_undo.add(BoutonOKandUndo(
+        undo_btn = BoutonOKandUndo(
             coord_x=self.width_screen - 100,
             coord_y=self.height_screen - 270,
             image_path=self.undo_button_img,
             value="UNDO",
-            id=len(self.bouton_ok_undo) + 1))
+            id=len(self.bouton_ok_undo) + 1,
+        )
+        self.bouton_ok_undo.add(undo_btn)
 
         for card in self.bouton_card_liste:
             card.afficher_carte_bouton(screen=self.screen)
@@ -573,176 +664,164 @@ class DesignInventoryRed:
         for button in self.bouton_ok_undo:
             button.afficher_ok_undo_bouton(screen=self.screen)
 
-        self.screen.blit(self.front_wallet_inventory_img,
-                         (0, self.height_screen - 50))
+        self.screen.blit(self.front_wallet_inventory_img, (0, self.height_screen - 50))
 
-    def en_cours_execution(self):
-        events = pygame.event.get()
-
+    def update(self):
+        """Mise a jour logique"""
         # Mise a jour du mouvement de la carte en cours de drag
         if self.dragged_card:
             mouse_pos = pygame.mouse.get_pos()
             self.dragged_card.update_drag(mouse_pos)
 
-        for event in events:
+    def handle_event(self, event: pygame.event.Event) -> str | None:
+        """Gestion des evenements"""
+        if event.type == pygame.QUIT:
+            self.quitter()
+            return "QUIT"
 
-            # affichage carte du jeu, pion du tour, cartes des valeurs des territoires, execute add_bouton_card
-            if self.var01:
-                self.screen.blit(self.map_img, (int(self.width_screen * 0.15), 0))
-
-                self.screen.blit(self.design_class.pion_dragon_32x32,
-                                 (int(self.width_screen / 2 + 211),
-                                  33 * self.tour_de_jeu))
-
-                # affiche carte zone value XINJIANG :
-                self.screen.blit(self.listvalue1_img,
-                                 (int(self.width_screen / 2 - 540),
-                                  35))
-                # affiche carte zone value TIBET :
-                self.screen.blit(self.listvalue2_img,
-                                 (int(self.width_screen / 2 - 540),
-                                  185))
-                # affiche carte zone value QINGHAI :
-                self.screen.blit(self.listvalue3_img,
-                                 (int(self.width_screen / 2 + 300),
-                                  205))
-                # affiche carte zone value MONGOLIA :
-                self.screen.blit(self.listvalue4_img,
-                                 (int(self.width_screen / 2 + 300),
-                                  5))
-                # affiche carte zone value MANDARIN :
-                self.screen.blit(self.listvalue5_img,
-                                 (int(self.width_screen / 2 + 300),
-                                  105))
-
-                self.add_bouton_card()
-                self.var01 = False
-
-            if event.type == pygame.QUIT:
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
                 self.quitter()
+                return "QUIT"
+                # pygame.quit()
 
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    self.quitter()
-                    pygame.quit()
+        # Gestion du drag & drop
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            pos = pygame.mouse.get_pos()
 
-            # Gestion du drag & drop
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                pos = pygame.mouse.get_pos()
-
-                # Clic gauche - commence le drag
-                if event.button == 1:
-                    # Verifie d'abord les boutons OK/UNDO
-                    clicked_button = False
-                    for key in self.bouton_ok_undo:
-                        if key.rect.collidepoint(pos):
-                            clicked_button = True
-                            if key.value == "OK":
-                                if self.liste_combat_temp.count(0) == 0:
-                                    self.list_combat_validee = self.liste_combat_temp
-                                    print(f"list_combat_validee : {self.list_combat_validee}")
-                                    self.statut = False
-                                else:
-                                    print(f"Vous devez placer 5 cartes!")
-
-                            elif key.value == "UNDO":
-                                # Reinitialiser tout
-                                for i in range(0, 5, 1):
-                                    self.screen.blit(self.design_class.liste_all_cards_img[20],
-                                                    (self.inventaire_et_pioche_design.liste_positions_x_combat[i],
-                                                     self.height_screen // 2))
-                                self.bouton_card_liste.empty()
-                                self.bouton_ok_undo.empty()
-                                self.add_bouton_card()
-                                self.liste_combat_temp = [0, 0, 0, 0, 0]
-                            break
-
-                    # Si on n'a pas clique sur un bouton, chercher une carte
-                    if not clicked_button:
-                        for card in self.bouton_card_liste:
-                            if card.rect.collidepoint(pos):
-                                self.dragged_card = card
-                                card.start_drag(pos)
-                                break
-
-                # Clic droit - retirer une carte placee
-                elif event.button == 3:
-                    for card in self.bouton_card_liste:
-                        if card.rect.collidepoint(pos) and card.combat_slot is not None:
-                            # Retirer la carte de l'emplacement de combat
-                            self.liste_combat_temp[card.combat_slot] = 0
-                            card.return_to_original()
-                            print(f"Carte retiree - liste_combat_temp: {self.liste_combat_temp}")
-                            break
-
-            # Fin du drag
-            elif event.type == pygame.MOUSEBUTTONUP:
-                if event.button == 1 and self.dragged_card:
-                    pos = pygame.mouse.get_pos()
-                    dropped_in_slot = False
-
-                    # Verifier si on drop sur un emplacement de combat
-                    for slot_index, slot_rect in enumerate(self.combat_slot_rects):
-                        if slot_rect.collidepoint(pos):
-                            # Verifier si l'emplacement est libre ou occupé
-                            if self.liste_combat_temp[slot_index] == 0:
-                                # Emplacement libre - placer la carte
-                                if self.dragged_card.combat_slot is not None:
-                                    # La carte vient d'un autre emplacement
-                                    self.liste_combat_temp[self.dragged_card.combat_slot] = 0
-
-                                self.liste_combat_temp[slot_index] = self.dragged_card.value
-                                self.dragged_card.combat_slot = slot_index
-                                self.dragged_card.rect_x = self.inventaire_et_pioche_design.liste_positions_x_combat[slot_index]
-                                self.dragged_card.rect_y = self.height_screen // 2
-                                dropped_in_slot = True
-                                print(f"Carte placee - liste_combat_temp: {self.liste_combat_temp}")
+            # Clic gauche - commence le drag
+            if event.button == 1:
+                # Verifie d'abord les boutons OK/UNDO
+                clicked_button = False
+                for key in self.bouton_ok_undo:
+                    if key.rect.collidepoint(pos):
+                        clicked_button = True
+                        if key.value == "OK":
+                            if self.liste_combat_temp.count(0) == 0:
+                                self.list_combat_validee = self.liste_combat_temp
+                                print(
+                                    f"list_combat_validee : {self.list_combat_validee}"
+                                )
+                                self.statut = False
                             else:
-                                # Emplacement occupe - echanger les cartes
-                                for other_card in self.bouton_card_liste:
-                                    if other_card.combat_slot == slot_index:
-                                        # Echanger les positions
-                                        old_slot = self.dragged_card.combat_slot
+                                print(f"Vous devez placer 5 cartes!")
 
-                                        if old_slot is not None:
-                                            # Echange entre deux emplacements
-                                            self.liste_combat_temp[slot_index] = self.dragged_card.value
-                                            self.liste_combat_temp[old_slot] = other_card.value
+                        elif key.value == "UNDO":
+                            # Reinitialiser tout
+                            self.bouton_card_liste.empty()
+                            self.bouton_ok_undo.empty()
+                            self.add_bouton_card()
+                            self.liste_combat_temp = [0, 0, 0, 0, 0]
+                        break
 
-                                            other_card.combat_slot = old_slot
-                                            other_card.rect_x = self.inventaire_et_pioche_design.liste_positions_x_combat[old_slot]
-                                            other_card.rect_y = self.height_screen // 2
-                                        else:
-                                            # Deplacement de l'inventaire vers un emplacement occupé
-                                            self.liste_combat_temp[slot_index] = self.dragged_card.value
-                                            other_card.return_to_original()
-
-                                        self.dragged_card.combat_slot = slot_index
-                                        self.dragged_card.rect_x = self.inventaire_et_pioche_design.liste_positions_x_combat[slot_index]
-                                        self.dragged_card.rect_y = self.height_screen // 2
-                                        dropped_in_slot = True
-                                        print(f"Cartes echangees - liste_combat_temp: {self.liste_combat_temp}")
-                                        break
+                # Si on n'a pas clique sur un bouton, chercher une carte
+                if not clicked_button:
+                    for card in self.bouton_card_liste:
+                        if card.rect.collidepoint(pos):
+                            self.dragged_card = card
+                            card.start_drag(pos)
                             break
 
-                    # Si pas droppé sur un emplacement valide, retourner à l'origine
-                    if not dropped_in_slot:
-                        if self.dragged_card.combat_slot is None:
-                            self.dragged_card.return_to_original()
-                        else:
-                            # Retourner a l'emplacement de combat precedent
-                            slot = self.dragged_card.combat_slot
-                            self.dragged_card.rect_x = self.inventaire_et_pioche_design.liste_positions_x_combat[slot]
+            # Clic droit - retirer une carte placee
+            elif event.button == 3:
+                for card in self.bouton_card_liste:
+                    if card.rect.collidepoint(pos) and card.combat_slot is not None:
+                        # Retirer la carte de l'emplacement de combat
+                        self.liste_combat_temp[card.combat_slot] = 0
+                        card.return_to_original()
+                        print(
+                            f"Carte retiree - liste_combat_temp: {self.liste_combat_temp}"
+                        )
+                        break
+
+        # Fin du drag
+        elif event.type == pygame.MOUSEBUTTONUP:
+            if event.button == 1 and self.dragged_card:
+                pos = pygame.mouse.get_pos()
+                dropped_in_slot = False
+
+                # Verifier si on drop sur un emplacement de combat
+                for slot_index, slot_rect in enumerate(self.combat_slot_rects):
+                    if slot_rect.collidepoint(pos):
+                        # Verifier si l'emplacement est libre ou occupé
+                        if self.liste_combat_temp[slot_index] == 0:
+                            # Emplacement libre - placer la carte
+                            if self.dragged_card.combat_slot is not None:
+                                # La carte vient d'un autre emplacement
+                                self.liste_combat_temp[
+                                    self.dragged_card.combat_slot
+                                ] = 0
+
+                            self.liste_combat_temp[slot_index] = (
+                                self.dragged_card.value
+                            )
+                            self.dragged_card.combat_slot = slot_index
+                            self.dragged_card.rect_x = self.inventaire_et_pioche_design.liste_positions_x_combat[
+                                slot_index
+                            ]
                             self.dragged_card.rect_y = self.height_screen // 2
+                            dropped_in_slot = True
+                            print(
+                                f"Carte placee - liste_combat_temp: {self.liste_combat_temp}"
+                            )
+                        else:
+                            # Emplacement occupe - echanger les cartes
+                            for other_card in self.bouton_card_liste:
+                                if other_card.combat_slot == slot_index:
+                                    # Echanger les positions
+                                    old_slot = self.dragged_card.combat_slot
 
-                    self.dragged_card.stop_drag()
-                    self.dragged_card = None
+                                    if old_slot is not None:
+                                        # Echange entre deux emplacements
+                                        self.liste_combat_temp[slot_index] = (
+                                            self.dragged_card.value
+                                        )
+                                        self.liste_combat_temp[old_slot] = (
+                                            other_card.value
+                                        )
 
-        # Redessiner l'ecran
-        self.redraw_screen()
-        pygame.display.flip()
+                                        other_card.combat_slot = old_slot
+                                        other_card.rect_x = self.inventaire_et_pioche_design.liste_positions_x_combat[
+                                            old_slot
+                                        ]
+                                        other_card.rect_y = self.height_screen // 2
+                                    else:
+                                        # Deplacement de l'inventaire vers un emplacement occupé
+                                        self.liste_combat_temp[slot_index] = (
+                                            self.dragged_card.value
+                                        )
+                                        other_card.return_to_original()
 
-    def redraw_screen(self):
+                                    self.dragged_card.combat_slot = slot_index
+                                    self.dragged_card.rect_x = self.inventaire_et_pioche_design.liste_positions_x_combat[
+                                        slot_index
+                                    ]
+                                    self.dragged_card.rect_y = (
+                                        self.height_screen // 2
+                                    )
+                                    dropped_in_slot = True
+                                    print(
+                                        f"Cartes echangees - liste_combat_temp: {self.liste_combat_temp}"
+                                    )
+                                    break
+                        break
+
+                # Si pas droppé sur un emplacement valide, retourner à l'origine
+                if not dropped_in_slot:
+                    if self.dragged_card.combat_slot is None:
+                        self.dragged_card.return_to_original()
+                    else:
+                        # Retourner a l'emplacement de combat precedent
+                        slot = self.dragged_card.combat_slot
+                        self.dragged_card.rect_x = self.inventaire_et_pioche_design.liste_positions_x_combat[
+                            slot
+                        ]
+                        self.dragged_card.rect_y = self.height_screen // 2
+
+                self.dragged_card.stop_drag()
+                self.dragged_card = None
+
+    def draw(self):
         """Redessine tout l'ecran"""
         # Effacer l'ecran completement
         self.screen.fill((0, 0, 0))
@@ -751,24 +830,45 @@ class DesignInventoryRed:
         self.screen.blit(self.map_img, (int(self.width_screen * 0.15), 0))
 
         # Pion du tour
-        self.screen.blit(self.design_class.pion_dragon_32x32,
-                        (int(self.width_screen / 2 + 211), 33 * self.tour_de_jeu))
+        self.screen.blit(
+            self.design_class.pion_dragon_32x32,
+            (int(self.width_screen / 2 + 211), 33 * (self.tour_de_jeu - 1)),
+        )
 
         # Cartes des valeurs de zone
-        self.screen.blit(self.listvalue1_img, (int(self.width_screen / 2 - 540), 35))
-        self.screen.blit(self.listvalue2_img, (int(self.width_screen / 2 - 540), 185))
-        self.screen.blit(self.listvalue3_img, (int(self.width_screen / 2 + 300), 205))
-        self.screen.blit(self.listvalue4_img, (int(self.width_screen / 2 + 300), 5))
-        self.screen.blit(self.listvalue5_img, (int(self.width_screen / 2 + 300), 105))
+        self.screen.blit(
+            cast(pygame.Surface, self.listvalue1_img),
+            (int(self.width_screen / 2 - 540), 35),
+        )
+        self.screen.blit(
+            cast(pygame.Surface, self.listvalue2_img),
+            (int(self.width_screen / 2 - 540), 185),
+        )
+        self.screen.blit(
+            cast(pygame.Surface, self.listvalue3_img),
+            (int(self.width_screen / 2 + 300), 205),
+        )
+        self.screen.blit(
+            cast(pygame.Surface, self.listvalue4_img),
+            (int(self.width_screen / 2 + 300), 5),
+        )
+        self.screen.blit(
+            cast(pygame.Surface, self.listvalue5_img),
+            (int(self.width_screen / 2 + 300), 105),
+        )
 
         # Fond du wallet
         self.screen.blit(self.back_wallet_inventory_img, (0, self.height_screen - 160))
 
         # Dessiner les emplacements de combat (cartes vides rouges)
         for i in range(5):
-            self.screen.blit(self.design_class.liste_all_cards_img[20],
-                           (self.inventaire_et_pioche_design.liste_positions_x_combat[i],
-                            self.height_screen // 2))
+            self.screen.blit(
+                cast(pygame.Surface, self.design_class.liste_all_cards_img[20]),
+                (
+                    self.inventaire_et_pioche_design.liste_positions_x_combat[i],
+                    self.height_screen // 2,
+                ),
+            )
 
         # Dessiner toutes les cartes SAUF celle en cours de drag
         for card in self.bouton_card_liste:
@@ -785,6 +885,7 @@ class DesignInventoryRed:
 
         # Fond avant du wallet
         self.screen.blit(self.front_wallet_inventory_img, (0, self.height_screen - 50))
+
 
 """
 app = DesignInventory()
