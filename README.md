@@ -1,8 +1,15 @@
-<h1 align="center">🏯 SunTzu_game</h1>
+<div align="center">
 
-<p align="center">
-  <i>"L'art de la guerre, c'est de soumettre l'ennemi sans combat."</i>
-</p>
+# 🏯 SunTzu_game
+
+*"L'art de la guerre, c'est de soumettre l'ennemi sans combat."*
+
+🎮 [CLIQUEZ ICI POUR TESTER LE JEU](https://maximemoya.github.io/SunTzu_game/)
+
+**Note :** Version Web. Prévoir **30 à 60 secondes** de chargement selon votre connexion.
+
+---
+</div>
 
 <div align="center">
   <kbd>
