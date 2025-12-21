@@ -116,8 +116,13 @@ class DesignInventoryBlue:
         liste_unite_terrain_a: list[int] = [0, 0, 0, 0, 0],
         liste_unite_terrain_b: list[int] = [0, 0, 0, 0, 0],
         liste_all_numbers_img: list[pygame.Surface | int] = [],
+        score_blue: int = 0,
+        score_red: int = 0,
     ) -> None:
         pygame.init()
+
+        self.score_blue = score_blue
+        self.score_red = score_red
 
         self.liste_combat_temp: list[int] = [0, 0, 0, 0, 0]
         self.list_combat_validee: list[int] = [0, 0, 0, 0, 0]
@@ -490,13 +495,23 @@ class DesignInventoryBlue:
 
     def draw(self):
         """Redessine tout l'ecran"""
-
         # Effacer l'ecran completement
-
         self.screen.fill((0, 0, 0))
 
-        # Fond de la carte
+        # Affichage des scores
+        font_score = pygame.font.Font("freesansbold.ttf", 16)
+        text_blue = font_score.render(
+            f"Score Bleu: {self.score_blue}", True, (100, 150, 255)
+        )
+        text_red = font_score.render(
+            f"Score Rouge: {self.score_red}", True, (255, 100, 100)
+        )
 
+        # Positionnement en haut à droite dans la zone noire
+        self.screen.blit(text_blue, (self.width_screen - 180, 30))
+        self.screen.blit(text_red, (self.width_screen - 180, 70))
+
+        # Fond de la carte
         self.screen.blit(self.map_img, (int(self.width_screen * 0.15), 0))
 
         self.analyse_color_unit_on_each_territories()
@@ -580,8 +595,13 @@ class DesignInventoryRed:
         liste_unite_terrain_a: list[int] = [0, 0, 0, 0, 0],
         liste_unite_terrain_b: list[int] = [0, 0, 0, 0, 0],
         liste_all_numbers_img: list[pygame.Surface | int] = [],
+        score_blue: int = 0,
+        score_red: int = 0,
     ) -> None:
         pygame.init()
+
+        self.score_blue = score_blue
+        self.score_red = score_red
 
         self.liste_combat_temp: list[int] = [0, 0, 0, 0, 0]
         self.list_combat_validee: list[int] = [0, 0, 0, 0, 0]
@@ -961,6 +981,19 @@ class DesignInventoryRed:
         """Redessine tout l'ecran"""
         # Effacer l'ecran completement
         self.screen.fill((0, 0, 0))
+
+        # Affichage des scores
+        font_score = pygame.font.Font("freesansbold.ttf", 16)
+        text_blue = font_score.render(
+            f"Score Bleu: {self.score_blue}", True, (100, 150, 255)
+        )
+        text_red = font_score.render(
+            f"Score Rouge: {self.score_red}", True, (255, 100, 100)
+        )
+
+        # Positionnement en haut à droite dans la zone noire
+        self.screen.blit(text_blue, (self.width_screen - 180, 30))
+        self.screen.blit(text_red, (self.width_screen - 180, 70))
 
         # Fond de la carte
         self.screen.blit(self.map_img, (int(self.width_screen * 0.15), 0))
