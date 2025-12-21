@@ -131,7 +131,13 @@ class Game:
             listvalue3_img=self.design_class.listvalue3_img,
             listvalue4_img=self.design_class.listvalue4_img,
             listvalue5_img=self.design_class.listvalue5_img,
+            liste_unite_terrain_a=self.liste_unitee_terrain_a,
+            liste_unite_terrain_b=self.liste_unitee_terrain_b,
+            liste_all_numbers_img=self.design_class.liste_all_numbers_img,
         )
+        self.design_inventory_red.analyse_number_unit_on_each_territories()
+        self.design_inventory_red.analyse_color_unit_on_each_territories()
+        
         self.current_ui = self.design_inventory_red
         self.state = GameState.CHOIX_ROUGE
 

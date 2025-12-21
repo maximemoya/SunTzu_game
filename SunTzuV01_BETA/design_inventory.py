@@ -75,7 +75,15 @@ class BoutonCardInventory(pygame.sprite.Sprite):
 
 class BoutonOKandUndo(pygame.sprite.Sprite):
 
-    def __init__(self, coord_x: int, coord_y: int, image_path: pygame.Surface, value: str, id: int, *groups: Any) -> None:
+    def __init__(
+        self,
+        coord_x: int,
+        coord_y: int,
+        image_path: pygame.Surface,
+        value: str,
+        id: int,
+        *groups: Any,
+    ) -> None:
         super().__init__(*groups)
         self.image: pygame.Surface = image_path
         self.rect_x: int = coord_x
@@ -125,12 +133,20 @@ class DesignInventoryBlue:
         self.liste_unite_terrain_a: list[int] = liste_unite_terrain_a
         self.liste_unite_terrain_b: list[int] = liste_unite_terrain_b
         self.liste_size_territories: list[int] = [0, 0, 0, 0, 0]
-        self.liste_color_territories: list[str] = ["VIDE", "VIDE", "VIDE", "VIDE", "VIDE"]
+        self.liste_color_territories: list[str] = [
+            "VIDE",
+            "VIDE",
+            "VIDE",
+            "VIDE",
+            "VIDE",
+        ]
         self.var_pos_unit: int = 0
         self.liste_all_numbers_img: list[pygame.Surface | int] = liste_all_numbers_img
 
         self.design_class: Design = Design()
-        self.inventaire_et_pioche_design: Inventaire = Inventaire(self.list_inventory_cards)
+        self.inventaire_et_pioche_design: Inventaire = Inventaire(
+            self.list_inventory_cards
+        )
 
         self.tour_de_jeu: int = tour_de_jeu_deck_class
 
@@ -147,7 +163,7 @@ class DesignInventoryBlue:
 
         # Variables pour le drag & drop
         self.dragged_card: BoutonCardInventory | None = None
-        self.combat_slot_rects: list[pygame.Rect] = []  # Rectangles des emplacements de combat
+        self.combat_slot_rects: list[pygame.Rect] = []
 
         self.ok_button_img: pygame.Surface = pygame.image.load("ressources/OK.png")
         self.undo_button_img: pygame.Surface = pygame.image.load("ressources/Undo.png")
@@ -157,7 +173,20 @@ class DesignInventoryBlue:
         self.front_wallet_inventory_img: pygame.Surface = pygame.image.load(
             "ressources/inventaire_wallet_front.png"
         )
-        self.map_img: pygame.Surface = pygame.image.load("ressources/back_ground_700x330.png")
+
+        self.map_img: pygame.Surface = pygame.image.load(
+            "ressources/back_ground_700x330.png"
+        )
+
+        # Coordonnees adaptees pour la carte 700x330 positionnee a (180, 0)
+        # Ratio approx vs Design (550x300): x1.27 width, x1.1 height
+        self.territory_coords = [
+            (402, 77),  # XINJIANG
+            (383, 160),  # TIBET
+            (644, 187),  # QINGHAI
+            (619, 33),  # MONGOLIA
+            (644, 99),  # MANDARIN
+        ]
 
         self.add_bouton_card()
 
@@ -215,7 +244,9 @@ class DesignInventoryBlue:
                 self.screen.blit(
                     cast(
                         pygame.Surface,
-                        self.liste_all_numbers_img[self.liste_size_territories[var_pos_unit]],
+                        self.liste_all_numbers_img[
+                            self.liste_size_territories[var_pos_unit]
+                        ],
                     ),
                     position,
                 )
@@ -390,9 +421,7 @@ class DesignInventoryBlue:
                                     self.dragged_card.combat_slot
                                 ] = 0
 
-                            self.liste_combat_temp[slot_index] = (
-                                self.dragged_card.value
-                            )
+                            self.liste_combat_temp[slot_index] = self.dragged_card.value
                             self.dragged_card.combat_slot = slot_index
                             self.dragged_card.rect_x = self.inventaire_et_pioche_design.liste_positions_x_combat[
                                 slot_index
@@ -434,9 +463,7 @@ class DesignInventoryBlue:
                                     self.dragged_card.rect_x = self.inventaire_et_pioche_design.liste_positions_x_combat[
                                         slot_index
                                     ]
-                                    self.dragged_card.rect_y = (
-                                        self.height_screen // 2
-                                    )
+                                    self.dragged_card.rect_y = self.height_screen // 2
                                     dropped_in_slot = True
                                     print(
                                         f"Cartes echangees - liste_combat_temp: {self.liste_combat_temp}"
@@ -451,9 +478,11 @@ class DesignInventoryBlue:
                     else:
                         # Retourner a l'emplacement de combat precedent
                         slot = self.dragged_card.combat_slot
-                        self.dragged_card.rect_x = self.inventaire_et_pioche_design.liste_positions_x_combat[
-                            slot
-                        ]
+                        self.dragged_card.rect_x = (
+                            self.inventaire_et_pioche_design.liste_positions_x_combat[
+                                slot
+                            ]
+                        )
                         self.dragged_card.rect_y = self.height_screen // 2
 
                 self.dragged_card.stop_drag()
@@ -461,13 +490,25 @@ class DesignInventoryBlue:
 
     def draw(self):
         """Redessine tout l'ecran"""
+
         # Effacer l'ecran completement
+
         self.screen.fill((0, 0, 0))
 
         # Fond de la carte
+
         self.screen.blit(self.map_img, (int(self.width_screen * 0.15), 0))
 
+        self.analyse_color_unit_on_each_territories()
+
+        self.analyse_number_unit_on_each_territories()
+
+        for idx, pos in enumerate(self.territory_coords):
+
+            self.position_unit_on_map(pos, idx)
+
         # Pion du tour
+
         self.screen.blit(
             self.design_class.pion_dragon_32x32,
             (int(self.width_screen / 2 + 211), 33 * (self.tour_de_jeu - 1)),
@@ -536,6 +577,9 @@ class DesignInventoryRed:
         listvalue3_img: pygame.Surface | int = 0,
         listvalue4_img: pygame.Surface | int = 0,
         listvalue5_img: pygame.Surface | int = 0,
+        liste_unite_terrain_a: list[int] = [0, 0, 0, 0, 0],
+        liste_unite_terrain_b: list[int] = [0, 0, 0, 0, 0],
+        liste_all_numbers_img: list[pygame.Surface | int] = [],
     ) -> None:
         pygame.init()
 
@@ -550,8 +594,23 @@ class DesignInventoryRed:
 
         self.list_inventory_cards_red: list[int] = list_inventory_cards
 
+        self.liste_unite_terrain_a: list[int] = liste_unite_terrain_a
+        self.liste_unite_terrain_b: list[int] = liste_unite_terrain_b
+        self.liste_size_territories: list[int] = [0, 0, 0, 0, 0]
+        self.liste_color_territories: list[str] = [
+            "VIDE",
+            "VIDE",
+            "VIDE",
+            "VIDE",
+            "VIDE",
+        ]
+        self.var_pos_unit: int = 0
+        self.liste_all_numbers_img: list[pygame.Surface | int] = liste_all_numbers_img
+
         self.design_class: Design = Design()
-        self.inventaire_et_pioche_design: Inventaire = Inventaire(self.list_inventory_cards_red)
+        self.inventaire_et_pioche_design: Inventaire = Inventaire(
+            self.list_inventory_cards_red
+        )
 
         self.tour_de_jeu: int = tour_de_jeu_deck_class
 
@@ -568,7 +627,9 @@ class DesignInventoryRed:
 
         # Variables pour le drag & drop
         self.dragged_card: BoutonCardInventory | None = None
-        self.combat_slot_rects: list[pygame.Rect] = []  # Rectangles des emplacements de combat
+        self.combat_slot_rects: list[pygame.Rect] = (
+            []
+        )  # Rectangles des emplacements de combat
 
         self.ok_button_img: pygame.Surface = pygame.image.load("ressources/OK.png")
         self.undo_button_img: pygame.Surface = pygame.image.load("ressources/Undo.png")
@@ -578,7 +639,18 @@ class DesignInventoryRed:
         self.front_wallet_inventory_img: pygame.Surface = pygame.image.load(
             "ressources/inventaire_wallet_front.png"
         )
-        self.map_img: pygame.Surface = pygame.image.load("ressources/back_ground_700x330.png")
+        self.map_img: pygame.Surface = pygame.image.load(
+            "ressources/back_ground_700x330.png"
+        )
+
+        # Coordonnees adaptees pour la carte 700x330 positionnee a (180, 0)
+        self.territory_coords = [
+            (402, 77),  # XINJIANG
+            (383, 160),  # TIBET
+            (644, 187),  # QINGHAI
+            (619, 33),  # MONGOLIA
+            (644, 99),  # MANDARIN
+        ]
 
         self.add_bouton_card()
 
@@ -602,6 +674,72 @@ class DesignInventoryRed:
             )  # 100 = hauteur approximative de la carte
             rect = pygame.Rect(x, y, card_width, card_height)
             self.combat_slot_rects.append(rect)
+
+    # Fonction qui renvoie une liste (liste_size_territories) de 5 valeurs de type nombre, désignant le nombre d'unité présente sur les territoires.
+    def analyse_number_unit_on_each_territories(self):
+        for i in range(0, 5, 1):
+            if self.liste_unite_terrain_a[i] > 0:
+                self.liste_size_territories.pop(i)
+                self.liste_size_territories.insert(i, self.liste_unite_terrain_a[i])
+            elif self.liste_unite_terrain_b[i] > 0:
+                self.liste_size_territories.pop(i)
+                self.liste_size_territories.insert(i, self.liste_unite_terrain_b[i])
+            else:
+                self.liste_size_territories.pop(i)
+                self.liste_size_territories.insert(i, 0)
+
+    # Fonction qui renvoie une liste (liste_color_territories) de 5 valeurs de type string, désignant l'appartenance des territoires, soit "ROUGE" "BLEU" ou "VIDE" selon les unitées présentes.
+    def analyse_color_unit_on_each_territories(self):
+        for i in range(0, 5, 1):
+            if self.liste_unite_terrain_b[i] > 0:
+                self.liste_color_territories.pop(i)
+                self.liste_color_territories.insert(i, "ROUGE")
+            elif self.liste_unite_terrain_a[i] > 0:
+                self.liste_color_territories.pop(i)
+                self.liste_color_territories.insert(i, "BLEU")
+            else:
+                self.liste_color_territories.pop(i)
+                self.liste_color_territories.insert(i, "VIDE")
+
+    # Fonction qui affiche les troupes sur le plateau selon leur nombre et leur couleur en fonction du paramètre (position) qui doit être rempli comme cela (x,y)
+    def position_unit_on_map(self, position: tuple[int, int], var_pos_unit: int):
+        if self.liste_color_territories[var_pos_unit] == "BLEU":
+            if self.liste_size_territories[var_pos_unit] < 14:
+                self.screen.blit(
+                    cast(
+                        pygame.Surface,
+                        self.liste_all_numbers_img[
+                            self.liste_size_territories[var_pos_unit]
+                        ],
+                    ),
+                    position,
+                )
+            if self.liste_size_territories[var_pos_unit] >= 14:
+                self.screen.blit(
+                    cast(pygame.Surface, self.liste_all_numbers_img[0]), position
+                )
+
+        if self.liste_color_territories[var_pos_unit] == "ROUGE":
+
+            if self.liste_size_territories[var_pos_unit] < 14:
+                self.screen.blit(
+                    cast(
+                        pygame.Surface,
+                        self.liste_all_numbers_img[
+                            self.liste_size_territories[var_pos_unit] + 20
+                        ],
+                    ),
+                    position,
+                )
+            if self.liste_size_territories[var_pos_unit] >= 14:
+                self.screen.blit(
+                    cast(pygame.Surface, self.liste_all_numbers_img[20]), position
+                )
+
+        if self.liste_color_territories[var_pos_unit] == "VIDE":
+            self.screen.blit(
+                cast(pygame.Surface, self.liste_all_numbers_img[14]), position
+            )
 
     def add_bouton_card(self):
 
@@ -752,9 +890,7 @@ class DesignInventoryRed:
                                     self.dragged_card.combat_slot
                                 ] = 0
 
-                            self.liste_combat_temp[slot_index] = (
-                                self.dragged_card.value
-                            )
+                            self.liste_combat_temp[slot_index] = self.dragged_card.value
                             self.dragged_card.combat_slot = slot_index
                             self.dragged_card.rect_x = self.inventaire_et_pioche_design.liste_positions_x_combat[
                                 slot_index
@@ -796,9 +932,7 @@ class DesignInventoryRed:
                                     self.dragged_card.rect_x = self.inventaire_et_pioche_design.liste_positions_x_combat[
                                         slot_index
                                     ]
-                                    self.dragged_card.rect_y = (
-                                        self.height_screen // 2
-                                    )
+                                    self.dragged_card.rect_y = self.height_screen // 2
                                     dropped_in_slot = True
                                     print(
                                         f"Cartes echangees - liste_combat_temp: {self.liste_combat_temp}"
@@ -813,9 +947,11 @@ class DesignInventoryRed:
                     else:
                         # Retourner a l'emplacement de combat precedent
                         slot = self.dragged_card.combat_slot
-                        self.dragged_card.rect_x = self.inventaire_et_pioche_design.liste_positions_x_combat[
-                            slot
-                        ]
+                        self.dragged_card.rect_x = (
+                            self.inventaire_et_pioche_design.liste_positions_x_combat[
+                                slot
+                            ]
+                        )
                         self.dragged_card.rect_y = self.height_screen // 2
 
                 self.dragged_card.stop_drag()
@@ -828,6 +964,12 @@ class DesignInventoryRed:
 
         # Fond de la carte
         self.screen.blit(self.map_img, (int(self.width_screen * 0.15), 0))
+
+        self.analyse_color_unit_on_each_territories()
+        self.analyse_number_unit_on_each_territories()
+
+        for idx, pos in enumerate(self.territory_coords):
+            self.position_unit_on_map(pos, idx)
 
         # Pion du tour
         self.screen.blit(
