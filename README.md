@@ -107,7 +107,7 @@ Le script s'occupe automatiquement de :
 </p>
 <br></br>
 
-## 1 - Installation Manuelle (Avancée)
+## 2 - Installation Manuelle (Avancée)
 
 Si vous préférez gérer manuellement l'environnement virtuel, suivez ces étapes.
 
@@ -165,15 +165,117 @@ deactivate
 <p align="center">
   <img src="https://capsule-render.vercel.app/api?type=waving&color=auto&height=100&section=footer" width="100%"/>
 </p>
-<br></br>
 
-## 2 - Commandes en jeu
+## 3 - Commandes en jeu
 
 - **ECHAP POUR QUITTER LA PARTIE**
 
 - **ESPACE POUR CONTINUER**
 
 - **DRAG AND DROP POUR BOUGER LES CARTES**
+
+<p align="center">
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=auto&height=100&section=footer" width="100%"/>
+</p>
+
+## 4 - 🤝 Contribuer — Génération des binaires (PyInstaller)
+
+Les contributeurs peuvent aider à la diffusion du jeu en **générant les versions natives** pour les plateformes qu'ils utilisent :
+*   🪟 **Windows** → `.exe`
+*   🐧 **Linux** → binaire exécutable
+
+Le projet utilise **PyInstaller** pour packager le jeu Python + Pygame en une application autonome.
+
+---
+
+### 📦 Pré-requis
+
+1.  **Python 3.x** installé.
+2.  **Pip** à jour.
+3.  Le projet cloné localement.
+4.  Installer les dépendances du projet : `pip install -r requirements.txt`.
+5.  Installer PyInstaller :
+    ```bash
+    pip install pyinstaller
+    ```
+
+---
+
+### 🪟 Windows (PowerShell ou CMD)
+
+> [!IMPORTANT]
+> Le build doit impérativement être effectué sur un système **Windows**.
+
+#### ✅ Mode `onefile` (Recommandé pour le partage simple)
+*Génère un seul fichier .exe facile à distribuer.*
+```powershell
+pyinstaller --noconfirm --clean --onefile --windowed `
+  --name "SunTzuGame" `
+  --add-data "SunTzuV01_BETA/ressources;ressources" `
+  SunTzuV01_BETA/main.py
+```
+
+#### ✅ Mode `onedir` (Optimisé pour la performance)
+*Lancement instantané, mais nécessite de zipper le dossier `dist/SunTzuGame` complet.*
+```powershell
+pyinstaller --noconfirm --clean --onedir --windowed `
+  --name "SunTzuGame" `
+  --add-data "SunTzuV01_BETA/ressources;ressources" `
+  SunTzuV01_BETA/main.py
+```
+
+**Résultats :**
+*   `dist/SunTzuGame.exe` (onefile)
+*   `dist/SunTzuGame/SunTzuGame.exe` (onedir)
+
+> [!NOTE]
+> Sous Windows, le séparateur pour `--add-data` est le point-virgule ( `;` ).
+
+---
+
+### 🐧 Linux (Terminal)
+
+> [!IMPORTANT]
+> Le build doit impérativement être effectué sur un système **Linux**.
+
+#### ✅ Mode `onefile` (Binaire unique)
+```bash
+pyinstaller --noconfirm --clean --onefile --windowed \
+  --name "SunTzuGame" \
+  --add-data "SunTzuV01_BETA/ressources:ressources" \
+  SunTzuV01_BETA/main.py
+```
+
+#### ✅ Mode `onedir` (Optimisé)
+```bash
+pyinstaller --noconfirm --clean --onedir --windowed \
+  --name "SunTzuGame" \
+  --add-data "SunTzuV01_BETA/ressources:ressources" \
+  SunTzuV01_BETA/main.py
+```
+
+**Résultats :**
+*   `dist/SunTzuGame` (binaire unique)
+*   `dist/SunTzuGame/SunTzuGame` (binaire dans dossier)
+
+> [!NOTE]
+> Sous Linux, le séparateur pour `--add-data` est le deux-points ( `:` ).
+
+---
+
+### 🧪 Tests recommandés avant Soumission (PR)
+
+Avant de proposer un binaire ou une modification du processus de build, merci de vérifier sur une machine test :
+- [ ] **Lancement :** Le jeu démarre-t-il sans terminal en arrière-plan ?
+- [ ] **Assets :** Les images s'affichent-elles correctement ?
+- [ ] **Audio :** Les musiques et sons se lancent-ils ?
+- [ ] **EventHandlers :** Les clics et drag&drop fonctionnent-ils ?
+- [ ] **Stabilité :** Le jeu se ferme-t-il proprement avec `ESC` ?
+
+---
+
+**Merci pour votre aide !** 🙏
+Chaque contribution rapproche **SunTzu_game** d’une diffusion multiplateforme. ⚔️🏯
 
 <br></br>
 

@@ -1,3 +1,10 @@
+import os
+import sys
+
+# Si le jeu est lancé en tant qu'exécutable (frozen), on se déplace dans le dossier temporaire d'extraction
+if getattr(sys, 'frozen', False):
+    os.chdir(sys._MEIPASS)
+
 import pygame
 import asyncio
 from enum import Enum, auto
