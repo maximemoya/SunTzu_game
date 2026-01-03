@@ -1,3 +1,10 @@
+import os
+import sys
+
+# Si le jeu est lancé en tant qu'exécutable (frozen), on se déplace dans le dossier temporaire d'extraction
+if getattr(sys, "frozen", False):
+    os.chdir(sys._MEIPASS)
+
 import pygame
 import asyncio
 from enum import Enum, auto
@@ -59,6 +66,9 @@ class Game:
         self.blue_theme_music = pygame.mixer.Sound("ressources/blue_theme.ogg")
         self.red_theme_music = pygame.mixer.Sound("ressources/red_theme.ogg")
         self.battle_theme_music = pygame.mixer.Sound("ressources/battle_theme.ogg")
+        self.blue_theme_music.set_volume(0.3)
+        self.red_theme_music.set_volume(0.3)
+        self.battle_theme_music.set_volume(0.3)
 
         # Initialisation du Design Class (utilisé pour les assets communs)
         self.design_class = Design(
@@ -141,7 +151,7 @@ class Game:
         )
         self.design_inventory_red.analyse_number_unit_on_each_territories()
         self.design_inventory_red.analyse_color_unit_on_each_territories()
-        
+
         self.current_ui = self.design_inventory_red
         self.state = GameState.CHOIX_ROUGE
 
@@ -220,7 +230,7 @@ class Game:
         self.battle_theme_music.stop()
 
         # Score calculation is now done in start_phase_anim_combat
-        
+
         if self.score_class.end_game:
             self.state = GameState.VICTOIRE
             # Design class handles victory drawing, just need to set data if needed
